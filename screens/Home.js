@@ -10,6 +10,8 @@ import Deal from "../DummyData/Deal";
 const { width, height } = Dimensions.get("window");
 
 export default class Home extends React.Component {
+
+    //Constructor
     constructor(props) {
         super(props);
         this.state = {
@@ -29,76 +31,88 @@ export default class Home extends React.Component {
         ]
     }
 
+    //This function renders the categories
+    //Function is called by FlatList
     renderCategories = (item, index) => {
         return (
-            <TouchableOpacity style={styles.category}>
-                <View style={[styles.categoryCircle,{backgroundColor: item.background}]}>
-                    <Image source={this.category[index]} style={styles.categoryIcon}/>
+            <TouchableOpacity style={styles.category}> {/*This marks a clickable outline for the category names*/}
+                <View style={[styles.categoryCircle,{backgroundColor: item.background}]}> {/*This renders the category circle with a specified background colour*/}
+                    <Image source={this.category[index]} style={styles.categoryIcon}/> {/*This renders the category icon*/}
                 </View>
                 <Text style={styles.categoryText}>{item.name}</Text>
             </TouchableOpacity>
         );
     }
 
+    //This function renders the banner
+    //Function is called by FlatList
     renderBanner = (item, index) => {
         return (
-                <Image source={item} style={styles.bannerImage}/>
+                <Image source={item} style={styles.bannerImage}/> //This renders the banner image
         );
     }
 
+    //This function renders the deals of the day
+    //Function is called by FlatList
     renderDeal = (item, index) => {
         return (
-            <TouchableOpacity style={styles.deal}>
+            <TouchableOpacity style={styles.deal}> {/*This marks a clickable outline for the deal*/}
                 <View style={styles.dealImageView}>
-                    <Image source={this.deal[index]} style={styles.dealImage}/>
+                    <Image source={this.deal[index]} style={styles.dealImage}/> {/*This renders the deal image*/}
                 </View>
                 <View style={styles.dealText}>
-                    <Text style={styles.dealTitle} numberOfLines={2}>{item.title}</Text>
-                    <Text style={styles.dealPrice}>₹ {item.price}</Text>
+                    <Text style={styles.dealTitle} numberOfLines={2}>{item.title}</Text> {/*This renders the deal title*/}
+                    <Text style={styles.dealPrice}>₹ {item.price}</Text> {/*This renders the deal price*/}
                 </View>
                 <View style={styles.viewDealRating}>
-                    <Text style={styles.dealRating}>{item.rating}</Text>
+                    <Text style={styles.dealRating}>{item.rating}</Text> {/*This renders the deal rating*/}
                 </View>
             </TouchableOpacity>
         );
     }
 
+    //This is the main render function
+    //It contains all the elements that are to be rendered on the screen
     render() {
         return (
             <>
-            <StatusBar backgroundColor={Constants.colors.primaryGreen} barStyle={'dark-content'}/>
-                <ScrollView style={styles.container} contentContainerStyle={{alignItems: 'center', justifyContent: 'flex-start',}}>
-                    <View style={styles.welcome}>
+            <StatusBar backgroundColor={Constants.colors.primaryGreen} barStyle={'dark-content'}/> {/*Makes the Status Bar colour PrimaryGreen & Text in White*/}
+                <ScrollView style={styles.container} contentContainerStyle={{alignItems: 'center', justifyContent: 'flex-start',}}> {/*ScrollView is chosen so that multiple elements aren't hidden and user can scroll through the homepage */}
+                    <View style={styles.welcome}> {/*This is the welcome section of the homepage*/}
                         <View style={styles.semicircle}/>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate("Cart")}>
-                            <Image source={Constants.img.cart} style={styles.cart}/>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate("Cart")}> {/*This marks a clickable outline for the cart icon*/}
+                            <Image source={Constants.img.cart} style={styles.cart}/> {/*This renders the cart icon*/}
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate("Profile")}>
-                            <Image source={Constants.img.profile} style={styles.profile}/>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate("Profile")}> {/*This marks a clickable outline for the profile icon*/}
+                            <Image source={Constants.img.profile} style={styles.profile}/> {/*This renders the profile icon*/}
                         </TouchableOpacity>
-                        <Text style={styles.welcomeText}>Hi, {this.state.name}</Text>
-                        <Text style={styles.welcomeSubText}>Welcome to {this.state.appName}</Text>
-                        <TouchableOpacity style={styles.search}>
-                            <Image source={Constants.img.search} style={styles.searchIcon}/>
-                            <TextInput style={styles.searchText} placeholder="Search Medicines & Healthcare Products" placeholderTextColor={Constants.colors.translucentBlue}></TextInput>
+                        <Text style={styles.welcomeText}>Hi, {this.state.name}</Text> {/*This renders the welcome text along with name of user*/}
+                        <Text style={styles.welcomeSubText}>Welcome to {this.state.appName}</Text> {/*This renders the welcome subtext along with name of app*/}
+                        <TouchableOpacity style={styles.search}> {/*This marks a clickable outline for the search bar*/}
+                            <Image source={Constants.img.search} style={styles.searchIcon}/> {/*This renders the search icon*/}
+                            <TextInput style={styles.searchText} placeholder="Search Medicines & Healthcare Products" placeholderTextColor={Constants.colors.translucentBlue}></TextInput> {/*This renders the search text*/}
                         </TouchableOpacity>
                     </View>
                     <Text style={[styles.heading, {marginTop: 24}]}>
                         Top Categories
                     </Text>
+                    {/*This creates a flatlist of category names*/}
                     <FlatList
-                        horizontal
-                        data={Category}
-                        style={{marginTop: 8, marginHorizontal: 15, minHeight: 100,}}
-                        renderItem={({item, index}) => (this.renderCategories(item, index))}/>
+                        horizontal //This makes the list horizontal instead of vertical
+                        data={Category} //This is the data that is to be rendered
+                        style={{marginTop: 8, marginHorizontal: 15, minHeight: 100,}} //This is the style of the flatlist
+                        renderItem={({item, index}) => (this.renderCategories(item, index))}/> {/*This calls the renderCategories function to render the categories*/}
+                    {/*This creates a flatlist of banner images*/}
                     <FlatList
                         horizontal
                         data={Constants.img.banner}
                         style={{marginTop: 24}}
                         renderItem={({item, index}) => (this.renderBanner(item, index))}/>
+                    
                     <Text style={[styles.heading, {marginTop: 24}]}>
                         Deals of the Day
                     </Text>
+                    {/*This creates a flatlist of deals of the day*/}
                     <FlatList
                         horizontal
                         data={Deal}

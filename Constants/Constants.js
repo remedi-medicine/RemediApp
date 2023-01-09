@@ -1,11 +1,13 @@
 import { Platform } from 'react-native';
 
+//This file contains all the global constants used in the app
 const Constants = {
     colors : {
-        primaryGreen : "#019874",
+        primaryGreen : "#019874", //This is the primary green colour used in the app
         primaryBlue : "#090F47",
         translucentBlue: "rgba(9, 15, 71, 45)",
     },
+    //This is the list of images used in the app
     img: {
         profile : require('../assets/images/StockProfile.png'),
         search : require('../assets/images/search.png'),
@@ -27,6 +29,7 @@ const Constants = {
 
         banner: [require('../assets/images/banner-1.jpg'), require('../assets/images/banner-2.jpg'), require('../assets/images/banner-3.png')],
     },
+    //This is the list of fonts used in the app
     fonts : {
         bold: 'Overpass-Bold',
         semibold : 'Overpass-SemiBold',
