@@ -24,36 +24,36 @@ export default class App extends React.Component {
                     screenOptions={({ route }) => ({
                         tabBarIcon: ({ focused }) => {
                             let iconPath;
-                            if (route.name === 'Home') { //For the Home Screen
-                                iconPath = focused //This checks if the current icon is selected/in focus
-                                ? Constants.img.home1 //Icon is chosen based on choice
+                            if (route.name === 'Home') {//For the Home Screen
+                                iconPath = focused//This checks if the current icon is selected/in focus
+                                ? Constants.img.home1//Icon is chosen based on choice
                                 : Constants.img.home0;
-                            } else if (route.name === 'Notification') { //For the Notification Screen
+                            } else if (route.name === 'Notification') {//For the Notification Screen
                                 iconPath = focused
                                 ? Constants.img.notif1
                                 : Constants.img.notif0;
-                            } else if (route.name === 'List') { //For the List Screen
+                            } else if (route.name === 'List') {//For the List Screen
                                 iconPath = focused
                                 ? Constants.img.list1
                                 : Constants.img.list0;
-                            } else if (route.name === 'Profile') { //For the Profile Screen
-                                iconPath = focused 
+                            } else if (route.name === 'Profile') {//For the Profile Screen
+                                iconPath = focused
                                 ? Constants.img.profile1
                                 : Constants.img.profile0;
                             }
-                            return <Image source={iconPath} style={{width: 17.27, height: 16}}/>; //Returns the icon
+                            return <Image source={iconPath} style={{width: 17.27, height: 16}}/>;//Returns the icon
                         },
-                        headerShown: false, //Hides the header
-                        tabBarShowLabel: false, //Hides the label
-                        tabBarActiveTintColor: Constants.colors.primaryGreen, //Sets the active color
-                        tabBarInactiveTintColor: Constants.colors.translucentBlue, //Sets the inactive color
+                        headerShown: false,//Hides the header
+                        tabBarShowLabel: false,//Hides the label
+                        tabBarActiveTintColor: Constants.colors.primaryGreen,//Sets the active color
+                        tabBarInactiveTintColor: Constants.colors.translucentBlue,//Sets the inactive color
                         })}
                     initialRouteName="Home">
                     <Tab.Screen name="Home" component={Home}/>
                     <Tab.Screen name="Notification" component={Notification}/>
-                    <Tab.Screen name="Cart" component={Cart} //Cart Icon is placed in the middle of the cart container
+                    <Tab.Screen name="Cart" component={Cart}//Cart Icon is placed in the middle of the cart container
                     options={{tabBarIcon: () => (<View style={styles.cartContainer}>
-                        <Image source={Constants.img.cart} style={{width: 16, height: 16}}/> {/*Cart Icon is unaffected by focus/choice */}
+                        <Image source={Constants.img.cart} style={{width: 16, height: 16}}/>{/*Cart Icon is unaffected by focus/choice */}
                         </View>),}}/>
                     <Tab.Screen name="List" component={List}/>
                     <Tab.Screen name="Profile" component={Profile}/>
