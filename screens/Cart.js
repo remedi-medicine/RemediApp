@@ -7,7 +7,7 @@ export default class Cart extends React.Component {
         return(
             <>
                 <View style={styles.container}>
-                    <Text style={styles.text}>Cart</Text>
+                    <Text style={styles.text}>Cart by Osama</Text>
                 </View>
             </>
         );
