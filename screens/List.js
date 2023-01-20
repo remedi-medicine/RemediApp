@@ -31,13 +31,13 @@ export default class List extends React.Component {
     renderListName = (item, index) => {
         showList = this.state.showListContent;
         return (
-            <> {/*This is a React Fragment - it is used to return multiple elements from a function*/}
+            <>{/*This is a React Fragment - it is used to return multiple elements from a function*/}
                 <TouchableOpacity style={styles.listName} onPress={() => {showList[index]=!showList[index]; this.setState({showListContent: showList})}}> 
-                    <Image source={Constants.img.listGreen} style={styles.listImage}/> {/*This displays the green list icon*/}
-                    <Text style={styles.listNameText}>{item}</Text> {/*This displays the name of the list*/}
-                    {!this.state.showListContent[index] ? <Image source={Constants.img.rightArrowTrans} style={styles.listImage}/> : null} {/*This displays the right arrow icon if the list collapsed & hides it when list is expanded*/}
+                    <Image source={Constants.img.listGreen} style={styles.listImage}/>{/*This displays the green list icon*/}
+                    <Text style={styles.listNameText}>{item}</Text>{/*This displays the name of the list*/}
+                    {!this.state.showListContent[index] ? <Image source={Constants.img.rightArrowTrans} style={styles.listImage}/> : null}{/*This displays the right arrow icon if the list collapsed & hides it when list is expanded*/}
                 </TouchableOpacity>
-                {this.state.showListContent[index] ? this.openList(item) : null} {/*This displays the list content if the list is expanded*/}
+                {this.state.showListContent[index] ? this.openList(item) : null}{/*This displays the list content if the list is expanded*/}
             </>
         );
     }
@@ -48,40 +48,40 @@ export default class List extends React.Component {
         drug_info = DrugList[item];
         return (
             <View style={styles.contentName}>
-                <Image source={{uri: drug_info.image}} style={styles.contentImage}/> {/*This displays the image of the drug*/}
-                <Text style={styles.contentNameText} numberOfLines={2}>{drug_info.name}</Text> {/*This displays the name of the drug*/}
+                <Image source={{uri: drug_info.image}} style={styles.contentImage}/>{/*This displays the image of the drug*/}
+                <Text style={styles.contentNameText} numberOfLines={2}>{drug_info.name}</Text>{/*This displays the name of the drug*/}
             </View>
         );
     }
 
     //This function displays the list content
     openList = (name) => {
-        thisList = CustList[name]; //This is the list of drugs in the list
-        total = 0; //This is the total price of the list
+        thisList = CustList[name];//This is the list of drugs in the list
+        total = 0;//This is the total price of the list
         for(let i=0; i<thisList.length; i++) {
-            total += DrugList[thisList[i]].price; //Calculating the total price of all drugs in the list
+            total += DrugList[thisList[i]].price;//Calculating the total price of all drugs in the list
         }
         return (
             <View style={styles.contentView}>
                 <View style={{flexDirection: 'row', width: 0.54*width}}>
-                    <Image source={Constants.img.listBlue} style={styles.listImage}/> {/*This displays the blue list icon*/}
+                    <Image source={Constants.img.listBlue} style={styles.listImage}/>{/*This displays the blue list icon*/}
                     <Text style={styles.listNameText}>List</Text>
                     <TouchableOpacity>
-                        <Image source={Constants.img.edit} style={{width: 12.8, height: 16}}/> {/*This displays the edit icon*/}
+                        <Image source={Constants.img.edit} style={{width: 12.8, height: 16}}/>{/*This displays the edit icon*/}
                     </TouchableOpacity>
                 </View>
                 {/*This is the FlatList which is used to display the list of drugs in the list */}
                 <FlatList
-                    data={CustList[name]} //This is the data that is to be displayed in the FlatList
-                    renderItem={({item, index}) => (this.renderListContent(item, index))} //This is the function that is called to render each item in the FlatList
-                    keyExtractor={(item, index) => index.toString()} //This is the key that is used to uniquely identify each item in the FlatList
+                    data={CustList[name]}//This is the data that is to be displayed in the FlatList
+                    renderItem={({item, index}) => (this.renderListContent(item, index))}//This is the function that is called to render each item in the FlatList
+                    keyExtractor={(item, index) => index.toString()}//This is the key that is used to uniquely identify each item in the FlatList
                     contentContainerStyle={{alignItems: 'center'}}
                     style={{marginVertical: 20}}
                 />
                 {/*This is the button that is used to make the payment for the list*/}
                 <TouchableOpacity style={styles.makePayment}>
                     <Text style={styles.makePaymentText}>Pay Now</Text> 
-                    <Text style={styles.makePaymentText}>₹{total}</Text> {/*This displays the total price of the list*/}
+                    <Text style={styles.makePaymentText}>₹{total}</Text>{/*This displays the total price of the list*/}
                 </TouchableOpacity>
             </View>)
     }
@@ -91,15 +91,15 @@ export default class List extends React.Component {
     render() {
         return(
             <>
-                <ScrollView style={styles.container}> {/*This is the main container of the screen - made Scrollable for user experience*/}
+                <ScrollView style={styles.container}>{/*This is the main container of the screen - made Scrollable for user experience*/}
                     <Text style={styles.headerText}>Your List</Text>
                     {/*This is the FlatList which is used to display the list of names of the lists created by the user */}
                     <FlatList
-                        data={Object.keys(CustList)} //This is the data that is to be displayed in the FlatList
-                        renderItem={({item, index}) => (this.renderListName(item, index))} //This is the function that is called to render each item in the FlatList
-                        keyExtractor={(item, index) => index.toString()} //This is the key that is used to uniquely identify each item in the FlatList
-                        ItemSeparatorComponent={() => <View style={styles.separator}/>} //This is the component that is used to separate each item in the FlatList
-                        style={{marginTop: 80}} //This is the style of the FlatList
+                        data={Object.keys(CustList)}//This is the data that is to be displayed in the FlatList
+                        renderItem={({item, index}) => (this.renderListName(item, index))}//This is the function that is called to render each item in the FlatList
+                        keyExtractor={(item, index) => index.toString()}//This is the key that is used to uniquely identify each item in the FlatList
+                        ItemSeparatorComponent={() => <View style={styles.separator}/>}//This is the component that is used to separate each item in the FlatList
+                        style={{marginTop: 80}}//This is the style of the FlatList
                         contentContainerStyle={{alignItems: 'center'}}
                     />
                 </ScrollView>
@@ -139,7 +139,6 @@ const styles = StyleSheet.create({
     listImage: {
         height: 16,
         width: 16,
-        // flex: 1
     },
     listNameText: {
         fontSize: 13,

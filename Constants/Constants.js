@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 //This file contains all the global constants used in the app
 const Constants = {
     colors : {
-        primaryGreen : "#019874", //This is the primary green colour used in the app
+        primaryGreen : "#019874",//This is the primary green colour used in the app
         primaryBlue : "#090F47",
         translucentBlue: "rgba(9, 15, 71, 45)",
     },

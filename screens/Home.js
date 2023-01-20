@@ -35,9 +35,9 @@ export default class Home extends React.Component {
     //Function is called by FlatList
     renderCategories = (item, index) => {
         return (
-            <TouchableOpacity style={styles.category}> {/*This marks a clickable outline for the category names*/}
-                <View style={[styles.categoryCircle,{backgroundColor: item.background}]}> {/*This renders the category circle with a specified background colour*/}
-                    <Image source={this.category[index]} style={styles.categoryIcon}/> {/*This renders the category icon*/}
+            <TouchableOpacity style={styles.category}>{/*This marks a clickable outline for the category names*/}
+                <View style={[styles.categoryCircle,{backgroundColor: item.background}]}>{/*This renders the category circle with a specified background colour*/}
+                    <Image source={this.category[index]} style={styles.categoryIcon}/>{/*This renders the category icon*/}
                 </View>
                 <Text style={styles.categoryText}>{item.name}</Text>
             </TouchableOpacity>
@@ -48,7 +48,7 @@ export default class Home extends React.Component {
     //Function is called by FlatList
     renderBanner = (item, index) => {
         return (
-                <Image source={item} style={styles.bannerImage}/> //This renders the banner image
+                <Image source={item} style={styles.bannerImage}/>//This renders the banner image
         );
     }
 
@@ -56,16 +56,16 @@ export default class Home extends React.Component {
     //Function is called by FlatList
     renderDeal = (item, index) => {
         return (
-            <TouchableOpacity style={styles.deal}> {/*This marks a clickable outline for the deal*/}
+            <TouchableOpacity style={styles.deal}>{/*This marks a clickable outline for the deal*/}
                 <View style={styles.dealImageView}>
-                    <Image source={this.deal[index]} style={styles.dealImage}/> {/*This renders the deal image*/}
+                    <Image source={this.deal[index]} style={styles.dealImage}/>{/*This renders the deal image*/}
                 </View>
                 <View style={styles.dealText}>
-                    <Text style={styles.dealTitle} numberOfLines={2}>{item.title}</Text> {/*This renders the deal title*/}
-                    <Text style={styles.dealPrice}>₹ {item.price}</Text> {/*This renders the deal price*/}
+                    <Text style={styles.dealTitle} numberOfLines={2}>{item.title}</Text>{/*This renders the deal title*/}
+                    <Text style={styles.dealPrice}>₹ {item.price}</Text>{/*This renders the deal price*/}
                 </View>
                 <View style={styles.viewDealRating}>
-                    <Text style={styles.dealRating}>{item.rating}</Text> {/*This renders the deal rating*/}
+                    <Text style={styles.dealRating}>{item.rating}</Text>{/*This renders the deal rating*/}
                 </View>
             </TouchableOpacity>
         );
@@ -76,21 +76,21 @@ export default class Home extends React.Component {
     render() {
         return (
             <>
-            <StatusBar backgroundColor={Constants.colors.primaryGreen} barStyle={'dark-content'}/> {/*Makes the Status Bar colour PrimaryGreen & Text in White*/}
-                <ScrollView style={styles.container} contentContainerStyle={{alignItems: 'center', justifyContent: 'flex-start',}}> {/*ScrollView is chosen so that multiple elements aren't hidden and user can scroll through the homepage */}
-                    <View style={styles.welcome}> {/*This is the welcome section of the homepage*/}
+            <StatusBar backgroundColor={Constants.colors.primaryGreen} barStyle={'dark-content'}/>{/*Makes the Status Bar colour PrimaryGreen & Text in White*/}
+                <ScrollView style={styles.container} contentContainerStyle={{alignItems: 'center', justifyContent: 'flex-start',}}>{/*ScrollView is chosen so that multiple elements aren't hidden and user can scroll through the homepage */}
+                    <View style={styles.welcome}>{/*This is the welcome section of the homepage*/}
                         <View style={styles.semicircle}/>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate("Cart")}> {/*This marks a clickable outline for the cart icon*/}
-                            <Image source={Constants.img.cart} style={styles.cart}/> {/*This renders the cart icon*/}
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate("Cart")}>{/*This marks a clickable outline for the cart icon*/}
+                            <Image source={Constants.img.cart} style={styles.cart}/>{/*This renders the cart icon*/}
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate("Profile")}> {/*This marks a clickable outline for the profile icon*/}
-                            <Image source={Constants.img.profile} style={styles.profile}/> {/*This renders the profile icon*/}
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate("Profile")}>{/*This marks a clickable outline for the profile icon*/}
+                            <Image source={Constants.img.profile} style={styles.profile}/>{/*This renders the profile icon*/}
                         </TouchableOpacity>
-                        <Text style={styles.welcomeText}>Hi, {this.state.name}</Text> {/*This renders the welcome text along with name of user*/}
-                        <Text style={styles.welcomeSubText}>Welcome to {this.state.appName}</Text> {/*This renders the welcome subtext along with name of app*/}
-                        <TouchableOpacity style={styles.search}> {/*This marks a clickable outline for the search bar*/}
-                            <Image source={Constants.img.search} style={styles.searchIcon}/> {/*This renders the search icon*/}
-                            <TextInput style={styles.searchText} placeholder="Search Medicines & Healthcare Products" placeholderTextColor={Constants.colors.translucentBlue}></TextInput> {/*This renders the search text*/}
+                        <Text style={styles.welcomeText}>Hi, {this.state.name}</Text>{/*This renders the welcome text along with name of user*/}
+                        <Text style={styles.welcomeSubText}>Welcome to {this.state.appName}</Text>{/*This renders the welcome subtext along with name of app*/}
+                        <TouchableOpacity style={styles.search}>{/*This marks a clickable outline for the search bar*/}
+                            <Image source={Constants.img.search} style={styles.searchIcon}/>{/*This renders the search icon*/}
+                            <TextInput style={styles.searchText} placeholder="Search Medicines & Healthcare Products" placeholderTextColor={Constants.colors.translucentBlue}></TextInput>{/*This renders the search text*/}
                         </TouchableOpacity>
                     </View>
                     <Text style={[styles.heading, {marginTop: 24}]}>
@@ -98,10 +98,10 @@ export default class Home extends React.Component {
                     </Text>
                     {/*This creates a flatlist of category names*/}
                     <FlatList
-                        horizontal //This makes the list horizontal instead of vertical
-                        data={Category} //This is the data that is to be rendered
-                        style={{marginTop: 8, marginHorizontal: 15, minHeight: 100,}} //This is the style of the flatlist
-                        renderItem={({item, index}) => (this.renderCategories(item, index))}/> {/*This calls the renderCategories function to render the categories*/}
+                        horizontal//This makes the list horizontal instead of vertical
+                        data={Category}//This is the data that is to be rendered
+                        style={{marginTop: 8, marginHorizontal: 15, minHeight: 100,}}//This is the style of the flatlist
+                        renderItem={({item, index}) => (this.renderCategories(item, index))}/>{/*This calls the renderCategories function to render the categories*/}
                     {/*This creates a flatlist of banner images*/}
                     <FlatList
                         horizontal

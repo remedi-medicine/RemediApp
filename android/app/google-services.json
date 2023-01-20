@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "205037353796",
+    "firebase_url": "https://react-native-970db-default-rtdb.firebaseio.com",
+    "project_id": "react-native-970db",
+    "storage_bucket": "react-native-970db.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205037353796:android:a9c32351cac744440f7511",
+        "android_client_info": {
+          "package_name": "com.firebaseapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "205037353796-d67vkgqs1fqe7fipvbtv52rc0rvauehj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAvXFW3MFxN1RnTTyzUQ8mAkvHmBN4vWs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "205037353796-d67vkgqs1fqe7fipvbtv52rc0rvauehj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205037353796:android:dc53ca417558f0de0f7511",
+        "android_client_info": {
+          "package_name": "com.remediapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "205037353796-d67vkgqs1fqe7fipvbtv52rc0rvauehj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAvXFW3MFxN1RnTTyzUQ8mAkvHmBN4vWs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "205037353796-d67vkgqs1fqe7fipvbtv52rc0rvauehj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
