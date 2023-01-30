@@ -56,7 +56,7 @@ export default class Home extends React.Component {
     //Function is called by FlatList
     renderDeal = (item, index) => {
         return (
-            <TouchableOpacity style={styles.deal}>{/*This marks a clickable outline for the deal*/}
+            <TouchableOpacity style={styles.deal} onPress={() => {this.props.navigation.navigate("Product")}}>{/*This marks a clickable outline for the deal*/}
                 <View style={styles.dealImageView}>
                     <Image source={this.deal[index]} style={styles.dealImage}/>{/*This renders the deal image*/}
                 </View>
