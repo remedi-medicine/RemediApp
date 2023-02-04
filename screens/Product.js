@@ -90,8 +90,8 @@ const Star = () => {
     //     fill="#FFCC48"
     //   />
     // </Svg>
-    <Image 
-      style={{width: 24,height: 22, padding: 10}}
+    <Image
+      style={{ width: 24, height: 22, padding: 10 }}
       source={{ uri: 'https://i.ibb.co/QHFccKB/Star-6.png' }}
     />
   );
