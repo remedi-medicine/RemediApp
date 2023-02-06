@@ -6,6 +6,10 @@ const Constants = {
         primaryGreen : "#019874",//This is the primary green colour used in the app
         primaryBlue : "#090F47",
         translucentBlue: "rgba(9, 15, 71, 45)",
+        centralGray: "rgba(196, 196, 196, 0.54)",
+        white : "#FFFFFF",
+        black : "#000000",
+        red: "#FF0000",
     },
     //This is the list of images used in the app
     img: {
@@ -26,6 +30,8 @@ const Constants = {
         profile0 : require('../assets/images/profile-deselected.png'),
         profile1 : require('../assets/images/profile-selected.png'),
         cart : require('../assets/images/cart.png'),
+
+        welcomeBack : require('../assets/images/welcome-back.png'),
 
         banner: [require('../assets/images/banner-1.jpg'), require('../assets/images/banner-2.jpg'), require('../assets/images/banner-3.png')],
     },

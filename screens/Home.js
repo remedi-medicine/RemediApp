@@ -31,6 +31,10 @@ export default class Home extends React.Component {
         ]
     }
 
+    componentDidMount = () => {
+        this.setState({name: this.props.route.params.name});
+    }
+
     //This function renders the categories
     //Function is called by FlatList
     renderCategories = (item, index) => {
@@ -220,7 +224,7 @@ const styles = StyleSheet.create({
     heading: {
         color: Constants.colors.primaryBlue,
         fontSize: 16,
-        fontFamily: Constants.fonts.semibold,
+        fontFamily: Constants.fonts.bold,
         alignSelf: 'flex-start',
         marginStart: 20,
     },
