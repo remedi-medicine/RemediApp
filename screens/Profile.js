@@ -211,7 +211,7 @@ const Profile = () => {
                <Separator/>
 
                 <ProfileValue
-                    icon={Constants.img.listGreen}
+                    icon={Constants.img.savedLater}
                     label="Saved for Later"
                     value="Remidi"
                 />
@@ -223,7 +223,7 @@ const Profile = () => {
                 />
                 <Separator/>
                 <ProfileValue
-                    icon={Constants.img.listGreen}
+                    icon={Constants.img.faq}
                     label="Faq"
                     value="Remidi"
                 />
