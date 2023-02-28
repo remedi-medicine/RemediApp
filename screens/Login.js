@@ -1,5 +1,8 @@
 import React from "react";
 import { StyleSheet, View, Text, Image, Dimensions, TextInput, ScrollView, Pressable } from "react-native";
+
+import auth from '@react-native-firebase/auth';
+
 import Constants from "../Constants/Constants";
 import {displayName as appName, subtitle as subName} from "../app.json";
 
@@ -17,6 +20,28 @@ export default class Cart extends React.Component {
     
     componentDidMount = () => {
         // setTimeout(() => {this.props.navigation.replace("Register")}, 1500);
+    }
+
+    loginUser = () => {
+        if(this.state.email == '' || this.state.password == '') {
+            alert("Please enter your email and password");
+            return;
+        }
+        auth()
+            .signInWithEmailAndPassword(this.state.email, this.state.password)
+            .then(() => {
+                this.props.navigation.navigate("AppBottomTab", {screen: "Home"});
+                console.log('User signed in!');
+            })
+            .catch(error => {
+                if (error.code === 'auth/email-already-in-use') {
+                    console.log('That email address is already in use!');
+                }
+                if (error.code === 'auth/invalid-email') {
+                    console.log('That email address is invalid!');
+                }
+                console.error(error);
+            });
     }
 
     render() {
@@ -51,7 +76,7 @@ export default class Cart extends React.Component {
                                 secureTextEntry={true}
                             />
                             <Text style={styles.forgotPassword}>Forgot Password?</Text>
-                            <Pressable style={styles.loginButton}>
+                            <Pressable style={styles.loginButton} onPress={() => {console.log("Login Button Clicked");this.loginUser()}}>
                                 <Text style={styles.loginText}>Sign In</Text>
                             </Pressable>
                             <Text style={styles.noAccount}>

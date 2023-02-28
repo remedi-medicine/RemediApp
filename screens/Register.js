@@ -1,5 +1,8 @@
 import React from "react";
 import { StyleSheet, View, Text, Image, Dimensions, TextInput, ScrollView, Pressable } from "react-native";
+
+import auth from '@react-native-firebase/auth';
+
 import Constants from "../Constants/Constants";
 import {displayName as appName, subtitle as subName} from "../app.json";
 
@@ -19,6 +22,33 @@ export default class Cart extends React.Component {
     
     componentDidMount = () => {
         // setTimeout(() => {this.props.navigation.replace("Register")}, 1500);
+    }
+
+    registerUser = () => {
+        console.log("Registering user: ", this.state.name, this.state.email, this.state.password, this.state.rePassword);
+        if ( this.state.name != '' && this.state.email !='' &&
+            this.state.password == this.state.rePassword && this.state.rePassword != '')
+        {
+            auth()
+            .createUserWithEmailAndPassword(this.state.email, this.state.password)
+            .then(() => {
+                const user = auth().currentUser;
+                user.updateProfile({displayName: this.state.name}).then(() => {
+                this.props.navigation.navigate("AppBottomTab", {screen: "Home"});});
+                console.log('User account created & signed in!');
+            })
+            .catch(error => {
+                if (error.code === 'auth/email-already-in-use') {
+                    console.log('That email address is already in use!');
+                }
+                if (error.code === 'auth/invalid-email') {
+                    console.log('That email address is invalid!');
+                }
+                console.error(error);
+            });
+        }
+        else
+            alert("Please enter your name, email and password");
     }
 
     render() {
@@ -73,7 +103,7 @@ export default class Cart extends React.Component {
                                 secureTextEntry={true}
                             />
                             {this.state.password == this.state.rePassword || this.state.rePassword == '' ? null : <Text style={styles.unmatchPassword}>Passwords Do Not Match</Text>}
-                            <Pressable style={styles.registerButton} onPress={() => {this.state.password == this.state.rePassword && this.state.rePassword != '' ? this.props.navigation.navigate("AppBottomTab", {screen: "Home", params: {name: this.state.name}}): null}}>
+                            <Pressable style={styles.registerButton} onPress={() => {this.registerUser()}}>
                                 <Text style={styles.registerText}>Sign Up</Text>
                             </Pressable>
                             <Text style={styles.noAccount}>

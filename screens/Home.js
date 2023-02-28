@@ -2,6 +2,8 @@ import React from "react";
 import { StyleSheet, ScrollView, View, Text, StatusBar, Image, TouchableOpacity, FlatList, TextInput } from "react-native";
 import { Dimensions } from "react-native";
 
+import auth from '@react-native-firebase/auth';
+
 import Constants from "../Constants/Constants";
 import Category from "../DummyData/Category";
 import Deal from "../DummyData/Deal";
@@ -32,7 +34,8 @@ export default class Home extends React.Component {
     }
 
     componentDidMount = () => {
-        this.setState({name: this.props.route.params.name});
+        const user = auth().currentUser;
+        this.setState({name: user.displayName});
     }
 
     //This function renders the categories
