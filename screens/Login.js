@@ -1,7 +1,9 @@
 import React from "react";
-import { StyleSheet, View, Text, Image, Dimensions, TextInput, ScrollView, Pressable } from "react-native";
+import { StyleSheet, View, Text, Image, Dimensions, TextInput, ScrollView, Pressable, Modal } from "react-native";
 
 import auth from '@react-native-firebase/auth';
+
+import * as Progress from "react-native-progress";
 
 import Constants from "../Constants/Constants";
 import {displayName as appName, subtitle as subName} from "../app.json";
@@ -15,6 +17,7 @@ export default class Cart extends React.Component {
             email: '',
             password: '',
             showBlank: false,
+            showProgress: false,
         }
     }
     
@@ -27,18 +30,20 @@ export default class Cart extends React.Component {
             alert("Please enter your email and password");
             return;
         }
+        this.setState({showProgress: true})
         auth()
             .signInWithEmailAndPassword(this.state.email, this.state.password)
             .then(() => {
                 this.props.navigation.navigate("AppBottomTab", {screen: "Home"});
-                console.log('User signed in!');
+                this.setState({showProgress: false})
             })
             .catch(error => {
+                this.setState({showProgress: false})
                 if (error.code === 'auth/email-already-in-use') {
-                    console.log('That email address is already in use!');
+                    alert('That email address is already in use!');
                 }
                 if (error.code === 'auth/invalid-email') {
-                    console.log('That email address is invalid!');
+                    alert('That email address is invalid!');
                 }
                 console.error(error);
             });
@@ -89,6 +94,16 @@ export default class Cart extends React.Component {
                     <View style={styles.semicircle1}/>
                     <View style={styles.semicircle2}/>
                 </View>
+                <Modal
+                visible={this.state.showProgress}
+                transparent={true}
+                animationType="fade">
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modal}>
+                            <Progress.CircleSnail indeterminate={true} color={Constants.colors.primaryGreen}/>
+                        </View>
+                    </View>
+                </Modal>
             </>
         );
     }
@@ -203,5 +218,18 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: Constants.fonts.bold,
         color: Constants.colors.primaryGreen,
-    }
+    },
+    modalContainer: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modal: {
+        width: 0.7*width,
+        backgroundColor: Constants.colors.white,
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 });

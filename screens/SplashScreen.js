@@ -1,5 +1,7 @@
 import React from "react";
-import {View, Text, StyleSheet} from "react-native";
+import {View, Text, Image, StyleSheet, Dimensions} from "react-native";
+
+import * as Progress from "react-native-progress";
 
 import auth from '@react-native-firebase/auth';
 
@@ -33,8 +35,10 @@ export default class SplashScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
+                <Image source={Constants.img.remediLogo} style={{width: 70, height: 70}} />
                 <Text style={styles.title}>{appName}</Text>
                 <Text style={styles.subtitle}>{subName}</Text>
+                <Progress.Bar color={Constants.colors.primaryGreen} width={Dimensions.get('screen').width*0.7} indeterminate={true}/>
             </View>
         );
     }
