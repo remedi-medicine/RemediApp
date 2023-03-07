@@ -29,7 +29,7 @@ export default class SplashScreen extends React.Component {
     componentDidMount = () => {
         const subscriber = auth().onAuthStateChanged(this.onAuthStateChanged);
         return subscriber; // unsubscribe on unmount
-        // setTimeout(() => {this.props.navigation.replace("Login")}, 1500);
+        // setTimeout(() => {this.props.navigation.replace("Register")}, 1500);
     }
 
     render() {

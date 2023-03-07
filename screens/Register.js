@@ -1,7 +1,9 @@
 import React from "react";
-import { StyleSheet, View, Text, Image, Dimensions, TextInput, ScrollView, Pressable } from "react-native";
+import { StyleSheet, View, Text, Image, Dimensions, TextInput, ScrollView, Pressable, Modal } from "react-native";
 
 import auth from '@react-native-firebase/auth';
+
+import * as Progress from "react-native-progress";
 
 import Constants from "../Constants/Constants";
 import {displayName as appName, subtitle as subName} from "../app.json";
@@ -17,10 +19,12 @@ export default class Cart extends React.Component {
             password: '',
             rePassword: '',
             showBlank: false,
+            showProgress: false,
         }
     }
     
     componentDidMount = () => {
+        setTimeout(() => {this.setState({showProgress: false})}, 30000);
         // setTimeout(() => {this.props.navigation.replace("Register")}, 1500);
     }
 
@@ -29,20 +33,25 @@ export default class Cart extends React.Component {
         if ( this.state.name != '' && this.state.email !='' &&
             this.state.password == this.state.rePassword && this.state.rePassword != '')
         {
+            this.setState({showProgress: true})
             auth()
             .createUserWithEmailAndPassword(this.state.email, this.state.password)
             .then(() => {
                 const user = auth().currentUser;
                 user.updateProfile({displayName: this.state.name}).then(() => {
-                this.props.navigation.navigate("AppBottomTab", {screen: "Home"});});
-                console.log('User account created & signed in!');
+                this.props.navigation.navigate("AppBottomTab", {screen: "Home"});})
+                .catch(error => {
+                    alert("Error updating user profile: ", error);});
+                alert('User account created & signed in!');
+                this.setState({showProgress: false});
             })
             .catch(error => {
+                this.setState({showProgress: false});
                 if (error.code === 'auth/email-already-in-use') {
-                    console.log('That email address is already in use!');
+                    alert('That email address is already in use!');
                 }
                 if (error.code === 'auth/invalid-email') {
-                    console.log('That email address is invalid!');
+                    alert('That email address is invalid!');
                 }
                 console.error(error);
             });
@@ -116,6 +125,25 @@ export default class Cart extends React.Component {
                     <View style={styles.semicircle1}/>
                     <View style={styles.semicircle2}/>
                 </View>
+                <Modal
+                visible={this.state.showProgress}
+                transparent={true}
+                animationType="fade">
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modal}>
+                            <View style={{justifyContent: 'center'}}>
+                                <Progress.CircleSnail
+                                indeterminate={true}
+                                color={Constants.colors.primaryGreen}
+                                style={{backgroundColor: 'white'}}
+                                spinDuration={3000}/>
+                                <View style={{width: 28, height: 28, position: 'absolute', alignSelf: 'center', backgroundColor: Constants.colors.white, borderRadius: 30}}/>
+                            </View>
+                            {/* <Text style={styles.modalHeading}>Log In</Text> */}
+                            <Text style={styles.modalText}>Please Wait Will We Register User</Text>
+                        </View>
+                    </View>
+                </Modal>
             </>
         );
     }
@@ -230,5 +258,32 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: Constants.fonts.bold,
         color: Constants.colors.primaryGreen,
-    }
+    },
+    modalContainer: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modal: {
+        width: 0.7*width,
+        backgroundColor: Constants.colors.white,
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 20,
+        paddingHorizontal: 25,
+        flexDirection: 'row'
+    },
+    modalHeading: {
+        fontSize: 30,
+        fontFamily: Constants.fonts.bold,
+        color: Constants.colors.primaryGreen,
+    },
+    modalText: {
+        fontSize: 16,
+        fontFamily: Constants.fonts.regular,
+        color: Constants.colors.primaryGreen,
+        marginStart: 20,
+    },
 });

@@ -22,7 +22,7 @@ export default class Cart extends React.Component {
     }
     
     componentDidMount = () => {
-        // setTimeout(() => {this.props.navigation.replace("Register")}, 1500);
+        // setTimeout(() => {this.setState({showProgress: false})}, 30000);
     }
 
     loginUser = () => {
@@ -100,7 +100,16 @@ export default class Cart extends React.Component {
                 animationType="fade">
                     <View style={styles.modalContainer}>
                         <View style={styles.modal}>
-                            <Progress.CircleSnail indeterminate={true} color={Constants.colors.primaryGreen}/>
+                            <View style={{justifyContent: 'center'}}>
+                                <Progress.CircleSnail
+                                indeterminate={true}
+                                color={Constants.colors.primaryGreen}
+                                style={{backgroundColor: 'white'}}
+                                spinDuration={3000}/>
+                                <View style={{width: 28, height: 28, position: 'absolute', alignSelf: 'center', backgroundColor: Constants.colors.white, borderRadius: 30}}/>
+                            </View>
+                            {/* <Text style={styles.modalHeading}>Log In</Text> */}
+                            <Text style={styles.modalText}>Please Wait Will We Log You In....</Text>
                         </View>
                     </View>
                 </Modal>
@@ -231,5 +240,19 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',
+        paddingVertical: 20,
+        paddingHorizontal: 25,
+        flexDirection: 'row'
+    },
+    modalHeading: {
+        fontSize: 30,
+        fontFamily: Constants.fonts.bold,
+        color: Constants.colors.primaryGreen,
+    },
+    modalText: {
+        fontSize: 16,
+        fontFamily: Constants.fonts.regular,
+        color: Constants.colors.primaryGreen,
+        marginStart: 20,
     },
 });

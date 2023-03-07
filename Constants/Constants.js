@@ -14,6 +14,7 @@ const Constants = {
     //This is the list of images used in the app
     img: {
         remediLogo : require('../assets/images/remedi-logo.png'),
+        remediRound : require('../assets/images/remedi-round.png'),
 
         profile : require('../assets/images/StockProfile.png'),
         search : require('../assets/images/search.png'),
