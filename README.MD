@@ -8,9 +8,7 @@ Remedi is a medicine delivery app that allows users to order medicines from near
 - [`assets`](/assets/) - Contains the assets used in the app
 - [`ios`](/ios/) - Contains the iOS project
 - [`Constants`](/Constants/) - Contains the constants used in the app
-```diff
 - [`DummyData`](/DummyData/) - Contains the dummy data used in the app
-```
 - [`screens`](/screens/) - Contains the screens used in the app
 
 ### Assets
