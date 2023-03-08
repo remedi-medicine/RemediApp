@@ -1,15 +1,22 @@
 import React from "react";
-import { StyleSheet, ScrollView, View, Text, StatusBar, Image, TouchableOpacity, FlatList, TextInput } from "react-native";
+import { StyleSheet, ScrollView, View, Text, StatusBar, Image, TouchableOpacity, FlatList, TextInput, Modal } from "react-native";
 import { Dimensions } from "react-native";
 
 import auth from '@react-native-firebase/auth';
+import { firebase } from '@react-native-firebase/database';
 
+import * as Progress from "react-native-progress";
+
+import {displayName as appName, subtitle as subName} from "../app.json";
 import Constants from "../Constants/Constants";
-import Category from "../DummyData/Category";
-import Deal from "../DummyData/Deal";
-
+import Category from "../Constants/Category";
 
 const { width, height } = Dimensions.get("window");
+
+const reference = firebase
+    .app()
+    .database('https://remedi---instant-medicine-default-rtdb.asia-southeast1.firebasedatabase.app/')
+    .ref('RemediData');
 
 export default class Home extends React.Component {
 
@@ -17,8 +24,9 @@ export default class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: "Amaan",
-            appName: "Remedi",
+            user: auth().currentUser,
+            deal: [],
+            showLoading: true,
         },
         this.category = [
             require('../assets/images/dental.png'),
@@ -34,8 +42,13 @@ export default class Home extends React.Component {
     }
 
     componentDidMount = () => {
-        const user = auth().currentUser;
-        this.setState({name: user.displayName});
+        reference
+        .child('Deals')
+        .once('value')
+        .then(snapshot => {
+            console.log('Deal: ', snapshot.val());
+            this.setState({deal: snapshot.val(), showLoading: false});
+        });
     }
 
     //This function renders the categories
@@ -65,7 +78,7 @@ export default class Home extends React.Component {
         return (
             <TouchableOpacity style={styles.deal} onPress={() => {this.props.navigation.navigate("Product")}}>{/*This marks a clickable outline for the deal*/}
                 <View style={styles.dealImageView}>
-                    <Image source={this.deal[index]} style={styles.dealImage}/>{/*This renders the deal image*/}
+                    <Image source={{uri: item.image}} style={styles.dealImage}/>{/*This renders the deal image*/}
                 </View>
                 <View style={styles.dealText}>
                     <Text style={styles.dealTitle} numberOfLines={2}>{item.title}</Text>{/*This renders the deal title*/}
@@ -93,8 +106,8 @@ export default class Home extends React.Component {
                         <TouchableOpacity onPress={() => this.props.navigation.navigate("Profile")}>{/*This marks a clickable outline for the profile icon*/}
                             <Image source={Constants.img.profile} style={styles.profile}/>{/*This renders the profile icon*/}
                         </TouchableOpacity>
-                        <Text style={styles.welcomeText}>Hi, {this.state.name}</Text>{/*This renders the welcome text along with name of user*/}
-                        <Text style={styles.welcomeSubText}>Welcome to {this.state.appName}</Text>{/*This renders the welcome subtext along with name of app*/}
+                        <Text style={styles.welcomeText}>Hi, {this.state.user.displayName}</Text>{/*This renders the welcome text along with name of user*/}
+                        <Text style={styles.welcomeSubText}>Welcome to {appName}</Text>{/*This renders the welcome subtext along with name of app*/}
                         <TouchableOpacity style={styles.search}>{/*This marks a clickable outline for the search bar*/}
                             <Image source={Constants.img.search} style={styles.searchIcon}/>{/*This renders the search icon*/}
                             <TextInput style={styles.searchText} placeholder="Search Medicines & Healthcare Products" placeholderTextColor={Constants.colors.translucentBlue}></TextInput>{/*This renders the search text*/}
@@ -122,11 +135,29 @@ export default class Home extends React.Component {
                     {/*This creates a flatlist of deals of the day*/}
                     <FlatList
                         horizontal
-                        data={Deal}
+                        data={this.state.deal}
                         style={{marginTop: 8, marginHorizontal: 15, minHeight: 275}}
                         renderItem={({item, index}) => (this.renderDeal(item, index))}/>
                     <View style={{height: 100}}/>
                 </ScrollView>
+                <Modal
+                visible={this.state.showLoading}
+                transparent={true}
+                animationType="fade">
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modal}>
+                            <View style={{justifyContent: 'center'}}>
+                                <Progress.CircleSnail
+                                indeterminate={true}
+                                size={60}
+                                color={Constants.colors.primaryGreen}
+                                style={{backgroundColor: 'white'}}
+                                spinDuration={3000}/>
+                                <View style={{width: 48, height: 48, position: 'absolute', alignSelf: 'center', backgroundColor: Constants.colors.white, borderRadius: 30}}/>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
             </>
         );
     }
@@ -321,5 +352,19 @@ const styles = StyleSheet.create({
         fontFamily: Constants.fonts.bold,
         alignSelf: 'flex-end',
         marginEnd: 10,
+    },
+    modalContainer: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modal: {
+        backgroundColor: Constants.colors.white,
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+        flexDirection: 'row'
     },
 });

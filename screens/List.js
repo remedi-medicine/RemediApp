@@ -1,11 +1,25 @@
 import React from "react";
-import { StyleSheet, View, FlatList, Image, Text, TouchableOpacity, ScrollView } from "react-native";import { Dimensions } from 'react-native';
+import { StyleSheet, View, FlatList, Image, Text, TouchableOpacity, ScrollView, Dimensions, Modal } from "react-native";
 
 import Constants from "../Constants/Constants";
-import CustList from "../DummyData/CustList";
-import DrugList from "../DummyData/DrugList";
+
+import auth from '@react-native-firebase/auth';
+import { firebase } from '@react-native-firebase/database';
+
+import * as Progress from "react-native-progress";
 
 const {height, width} = Dimensions.get('window');
+const remediData = firebase
+    .app()
+    .database('https://remedi---instant-medicine-default-rtdb.asia-southeast1.firebasedatabase.app/')
+    .ref('RemediData');
+
+const userData = firebase
+    .app()
+    .database('https://remedi---instant-medicine-default-rtdb.asia-southeast1.firebasedatabase.app/')
+    .ref('UserData');
+
+let DrugList = {}, CustList = {};
 
 export default class List extends React.Component {
     //Constructor
@@ -13,17 +27,30 @@ export default class List extends React.Component {
         super(props);
         this.state = {
             showListContent: [],
+            user: null,
+            showLoading1: true,
+            showLoading2: true,
         }
     }
 
     //This function is called when this screen is rendered for the absolute first time
     componentDidMount = () => {
-        length = Object.keys(CustList).length;
-        show = [];
-        for (let i = 0; i < length; i++) {
-            show.push(false);
-        }
-        this.setState({ showListContent: show });
+        // let CustList = {};
+        // let DrugList = [];
+        let user = auth().currentUser;
+        let uid = user.uid;
+        userData.child(uid).child('MyList').orderByKey().on('value', (snapshot) => {
+            console.log("CustList: ", snapshot.val());
+            CustList = snapshot.val();
+            length = Object.keys(CustList).length;
+            show = [];
+            for (let i = 0; i < length; i++) {
+                show.push(false);
+            }
+            this.setState({user:user, showListContent: show, showLoading1: false});})
+        remediData.child('DrugList').on('value', (snapshot) => {
+            DrugList = snapshot.val();
+            this.setState({showLoading2: false});})
     }
 
     //This function display the list name
@@ -56,6 +83,7 @@ export default class List extends React.Component {
 
     //This function displays the list content
     openList = (name) => {
+        console.log(name, "DrugList: ", DrugList);
         thisList = CustList[name];//This is the list of drugs in the list
         total = 0;//This is the total price of the list
         for(let i=0; i<thisList.length; i++) {
@@ -63,7 +91,7 @@ export default class List extends React.Component {
         }
         return (
             <View style={styles.contentView}>
-                <View style={{flexDirection: 'row', width: 0.54*width}}>
+                <View style={{flexDirection: 'row', width: 0.64*width}}>
                     <Image source={Constants.img.listBlue} style={styles.listImage}/>{/*This displays the blue list icon*/}
                     <Text style={styles.listNameText}>List</Text>
                     <TouchableOpacity>
@@ -103,6 +131,24 @@ export default class List extends React.Component {
                         contentContainerStyle={{alignItems: 'center'}}
                     />
                 </ScrollView>
+                <Modal
+                visible={this.state.showLoading1 && this.state.showLoading2}
+                transparent={true}
+                animationType="fade">
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modal}>
+                            <View style={{justifyContent: 'center'}}>
+                                <Progress.CircleSnail
+                                indeterminate={true}
+                                size={60}
+                                color={Constants.colors.primaryGreen}
+                                style={{backgroundColor: 'white'}}
+                                spinDuration={3000}/>
+                                <View style={{width: 48, height: 48, position: 'absolute', alignSelf: 'center', backgroundColor: Constants.colors.white, borderRadius: 30}}/>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
             </>
         );
     }
@@ -148,7 +194,7 @@ const styles = StyleSheet.create({
         flex: 5
     },
     contentView: {
-        width: 0.66*width,
+        width: 0.8*width,
         minHeight: 315,
         borderWidth: 1,
         borderColor: "rgba(0, 0, 0, 0.3)",
@@ -160,7 +206,7 @@ const styles = StyleSheet.create({
     },
     contentName: {
         height: 40,
-        width: 0.8*0.66*width,
+        width: 0.8*0.8*width,
         justifyContent: 'flex-start',
         alignContent: 'center',
         alignItems: 'center',
@@ -188,5 +234,19 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: 'white',
         fontFamily: Constants.fonts.bold,
+    },
+    modalContainer: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modal: {
+        backgroundColor: Constants.colors.white,
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+        flexDirection: 'row'
     },
 });
