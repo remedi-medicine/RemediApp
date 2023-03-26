@@ -40,7 +40,6 @@ export default class List extends React.Component {
         let user = auth().currentUser;
         let uid = user.uid;
         userData.child(uid).child('MyList').orderByKey().on('value', (snapshot) => {
-            console.log("CustList: ", snapshot.val());
             CustList = snapshot.val();
             length = Object.keys(CustList).length;
             show = [];

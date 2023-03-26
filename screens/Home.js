@@ -1,11 +1,12 @@
 import React from "react";
-import { StyleSheet, ScrollView, View, Text, StatusBar, Image, TouchableOpacity, FlatList, TextInput, Modal } from "react-native";
+import { StyleSheet, ScrollView, View, Text, StatusBar, Image, TouchableOpacity, FlatList, TextInput, Modal, PermissionsAndroid, Alert } from "react-native";
 import { Dimensions } from "react-native";
 
 import auth from '@react-native-firebase/auth';
 import { firebase } from '@react-native-firebase/database';
 
 import * as Progress from "react-native-progress";
+import Geolocation from 'react-native-geolocation-service';
 
 import {displayName as appName, subtitle as subName} from "../app.json";
 import Constants from "../Constants/Constants";
@@ -13,10 +14,12 @@ import Category from "../Constants/Category";
 
 const { width, height } = Dimensions.get("window");
 
-const reference = firebase
+const remediData = firebase
     .app()
     .database('https://remedi---instant-medicine-default-rtdb.asia-southeast1.firebasedatabase.app/')
     .ref('RemediData');
+
+let DrugList = {};
 
 export default class Home extends React.Component {
 
@@ -26,7 +29,8 @@ export default class Home extends React.Component {
         this.state = {
             user: auth().currentUser,
             deal: [],
-            showLoading: true,
+            showLoading1: true,
+            showLoading2: true,
         },
         this.category = [
             require('../assets/images/dental.png'),
@@ -42,13 +46,60 @@ export default class Home extends React.Component {
     }
 
     componentDidMount = () => {
-        reference
-        .child('Deals')
-        .once('value')
-        .then(snapshot => {
-            console.log('Deal: ', snapshot.val());
-            this.setState({deal: snapshot.val(), showLoading: false});
+        remediData.child('DrugList').on('value', (snapshot) => {
+            DrugList = snapshot.val();
+            console.log("Drugs: ",Object.keys(DrugList));
+            this.setState({showLoading1: false});
         });
+
+        remediData.child('Deals').once('value').then(snapshot => {
+            this.setState({deal: snapshot.val(), showLoading2: false});
+        });
+
+        PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(granted => {
+            granted ? this._getCurrentLocation() :
+            (
+                PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(granted => {
+                    granted ? this._getCurrentLocation()
+                    : Alert.alert('Location Permission Denied','Please enable location permission to use this app')
+                }).catch(err => {
+                    console.warn(err);})
+            )
+        });
+    }
+
+    _getCurrentLocation = () => {
+        let latitude=0, longitude=0;
+        Geolocation.getCurrentPosition(
+            position => {
+                latitude = position.coords.latitude,
+                longitude = position.coords.longitude,
+                fetch(`https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=bf089be2d5324c1da0876446fff7d004`)
+                .then(response => response.json())
+                .then(data => {
+                    this.setState({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        suburb: data.results[0].components.suburb,
+                        city: data.results[0].components.city,
+                        state: data.results[0].components.state,
+                        country: data.results[0].components.country,
+                        postcode: data.results[0].components.postcode,
+                        formatted: data.results[0].formatted,
+                        });
+                })
+                
+            },
+            error => {
+                Alert.alert(error.message.toString());
+            },
+            {
+                showLocationDialog: true,
+                enableHighAccuracy: true,
+                timeout: 20000,
+                maximumAge: 0
+            }
+        );
     }
 
     //This function renders the categories
@@ -91,6 +142,26 @@ export default class Home extends React.Component {
         );
     }
 
+    //This function renders all the available drugs
+    //Function is called by FlatList
+    renderAllDrugs = (item, index) => {
+        item = DrugList[item];
+        return (
+            <TouchableOpacity style={styles.deal} onPress={() => {this.props.navigation.navigate("Product")}}>{/*This marks a clickable outline for the drug*/}
+                <View style={styles.dealImageView}>
+                    <Image source={{uri: item.image}} style={styles.dealImage}/>{/*This renders the drug image*/}
+                </View>
+                <View style={styles.dealText}>
+                    <Text style={styles.dealTitle} numberOfLines={2}>{item.name}</Text>{/*This renders the drug name*/}
+                    <Text style={styles.dealPrice}>₹ {item.price}</Text>{/*This renders the drug price*/}
+                </View>
+                <View style={styles.viewDealRating}>
+                    <Text style={styles.dealRating}>{item.rating}</Text>{/*This renders the drug rating*/}
+                </View>
+            </TouchableOpacity>
+        );
+    }
+
     //This is the main render function
     //It contains all the elements that are to be rendered on the screen
     render() {
@@ -100,14 +171,14 @@ export default class Home extends React.Component {
                 <ScrollView style={styles.container} contentContainerStyle={{alignItems: 'center', justifyContent: 'flex-start',}}>{/*ScrollView is chosen so that multiple elements aren't hidden and user can scroll through the homepage */}
                     <View style={styles.welcome}>{/*This is the welcome section of the homepage*/}
                         <View style={styles.semicircle}/>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate("Cart")}>{/*This marks a clickable outline for the cart icon*/}
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate("Product")}>{/*This marks a clickable outline for the cart icon*/}
                             <Image source={Constants.img.cart} style={styles.cart}/>{/*This renders the cart icon*/}
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate("Profile")}>{/*This marks a clickable outline for the profile icon*/}
                             <Image source={Constants.img.profile} style={styles.profile}/>{/*This renders the profile icon*/}
                         </TouchableOpacity>
                         <Text style={styles.welcomeText}>Hi, {this.state.user.displayName}</Text>{/*This renders the welcome text along with name of user*/}
-                        <Text style={styles.welcomeSubText}>Welcome to {appName}</Text>{/*This renders the welcome subtext along with name of app*/}
+                        <Text style={styles.welcomeSubText}>{this.state.suburb}, {this.state.city} - {this.state.postcode}</Text>{/*This renders the location of the user*/}
                         <TouchableOpacity style={styles.search}>{/*This marks a clickable outline for the search bar*/}
                             <Image source={Constants.img.search} style={styles.searchIcon}/>{/*This renders the search icon*/}
                             <TextInput style={styles.searchText} placeholder="Search Medicines & Healthcare Products" placeholderTextColor={Constants.colors.translucentBlue}></TextInput>{/*This renders the search text*/}
@@ -138,10 +209,25 @@ export default class Home extends React.Component {
                         data={this.state.deal}
                         style={{marginTop: 8, marginHorizontal: 15, minHeight: 275}}
                         renderItem={({item, index}) => (this.renderDeal(item, index))}/>
+                    
+                    <View style={{width: '100%'}}>
+                    <Text style={[styles.heading, {marginTop: 24}]}>
+                        All Products at {appName}
+                    </Text>
+                    <Text style={[styles.heading, {marginTop: 24, color: Constants.colors.primaryGreen, position: 'absolute', right: 20}]}
+                    onPress={() => this.props.navigation.navigate("ViewDrugs")}>
+                        View All
+                    </Text></View>
+                    {/*This creates a flatlist of all available drugs*/}
+                    <FlatList
+                        horizontal
+                        data={Object.keys(DrugList)}
+                        style={{marginTop: 8, marginHorizontal: 15, minHeight: 275}}
+                        renderItem={({item, index}) => (this.renderAllDrugs(item, index))}/>
                     <View style={{height: 100}}/>
                 </ScrollView>
                 <Modal
-                visible={this.state.showLoading}
+                visible={this.state.showLoading1 || this.state.showLoading2}
                 transparent={true}
                 animationType="fade">
                     <View style={styles.modalContainer}>

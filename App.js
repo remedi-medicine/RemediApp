@@ -9,6 +9,7 @@ import SplashScreen from './screens/SplashScreen';
 import Login from './screens/Login';
 import Register from './screens/Register';
 import Product from './screens/Product';
+import ViewDrugs from './screens/ViewDrugs';
 
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -26,6 +27,7 @@ export default class App extends React.Component {
                     <Stack.Screen name="Login" component={Login}/>
                     <Stack.Screen name="Register" component={Register}/>
                     <Stack.Screen name="Product" component={Product}/>
+                    <Stack.Screen name="ViewDrugs" component={ViewDrugs}/>
                 </Stack.Navigator>
             </NavigationContainer>
         );
