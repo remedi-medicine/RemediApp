@@ -48,7 +48,6 @@ export default class Home extends React.Component {
     componentDidMount = () => {
         remediData.child('DrugList').on('value', (snapshot) => {
             DrugList = snapshot.val();
-            console.log("Drugs: ",Object.keys(DrugList));
             this.setState({showLoading1: false});
         });
 

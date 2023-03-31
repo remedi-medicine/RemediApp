@@ -82,7 +82,6 @@ export default class List extends React.Component {
 
     //This function displays the list content
     openList = (name) => {
-        console.log(name, "DrugList: ", DrugList);
         thisList = CustList[name];//This is the list of drugs in the list
         total = 0;//This is the total price of the list
         for(let i=0; i<thisList.length; i++) {
