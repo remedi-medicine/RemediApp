@@ -27,7 +27,7 @@ export default class List extends React.Component {
         super(props);
         this.state = {
             showListContent: [],
-            user: null,
+            user: auth().currentUser,
             showLoading1: true,
             showLoading2: true,
         }
@@ -37,7 +37,7 @@ export default class List extends React.Component {
     componentDidMount = () => {
         // let CustList = {};
         // let DrugList = [];
-        let user = auth().currentUser;
+        let user = this.state.user;
         let uid = user.uid;
         userData.child(uid).child('MyList').orderByKey().on('value', (snapshot) => {
             CustList = snapshot.val();
@@ -50,6 +50,25 @@ export default class List extends React.Component {
         remediData.child('DrugList').on('value', (snapshot) => {
             DrugList = snapshot.val();
             this.setState({showLoading2: false});})
+    }
+
+    //This function is used to render a profile card
+    renderProfileCard() {
+        return (
+            <View style={styles.cardView}>
+                <TouchableOpacity style={{width: 60, height: 60,}}>
+                    <Image source={Constants.img.profile} style={styles.profileImage}/>
+                </TouchableOpacity>
+                <View style={{flex: 1, marginLeft: 10, alignItems: 'flex-start',}}>
+                    <Text style={{color: 'white', fontFamily: Constants.fonts.bold, fontSize: 22}}>
+                        Hi, {this.state.user.displayName}
+                    </Text>
+                    <Text style={{color: 'white', fontFamily: Constants.fonts.regular, fontSize: 15}}>
+                        View Your Profile
+                    </Text>
+                </View>
+            </View>
+        )
     }
 
     //This function display the list name
@@ -118,14 +137,13 @@ export default class List extends React.Component {
         return(
             <>
                 <ScrollView style={styles.container}>{/*This is the main container of the screen - made Scrollable for user experience*/}
-                    <Text style={styles.headerText}>Your List</Text>
+                    {this.renderProfileCard()}
                     {/*This is the FlatList which is used to display the list of names of the lists created by the user */}
                     <FlatList
                         data={Object.keys(CustList)}//This is the data that is to be displayed in the FlatList
                         renderItem={({item, index}) => (this.renderListName(item, index))}//This is the function that is called to render each item in the FlatList
                         keyExtractor={(item, index) => index.toString()}//This is the key that is used to uniquely identify each item in the FlatList
                         ItemSeparatorComponent={() => <View style={styles.separator}/>}//This is the component that is used to separate each item in the FlatList
-                        style={{marginTop: 80}}//This is the style of the FlatList
                         contentContainerStyle={{alignItems: 'center'}}
                     />
                 </ScrollView>
@@ -158,6 +176,23 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         width: '100%',
         alignContent: 'center',
+    },
+    cardView: {
+        flexDirection: 'row',
+        marginTop: 20,
+        paddingHorizontal: 20,
+        paddingVertical: 20,
+        borderRadius: 20,
+        backgroundColor: Constants.colors.primaryGreen,
+        width: '90%',
+        alignSelf: 'center',
+    },
+    profileImage: {
+        width: '90%',
+        height: '90%',
+        borderRadius: 40,
+        borderWidth: 2,
+        borderColor: 'white',
     },
     headerText: {
         fontSize: 20,

@@ -170,10 +170,10 @@ export default class Home extends React.Component {
                 <ScrollView style={styles.container} contentContainerStyle={{alignItems: 'center', justifyContent: 'flex-start',}}>{/*ScrollView is chosen so that multiple elements aren't hidden and user can scroll through the homepage */}
                     <View style={styles.welcome}>{/*This is the welcome section of the homepage*/}
                         <View style={styles.semicircle}/>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate("Product")}>{/*This marks a clickable outline for the cart icon*/}
-                            <Image source={Constants.img.cart} style={styles.cart}/>{/*This renders the cart icon*/}
+                        <TouchableOpacity style={styles.cart} onPress={() => this.props.navigation.navigate("Cart")}>{/*This marks a clickable outline for the cart icon*/}
+                            <Image source={Constants.img.cart} style={{width: 20, height: 20}}/>{/*This renders the cart icon*/}
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate("Profile")}>{/*This marks a clickable outline for the profile icon*/}
+                        <TouchableOpacity  style={{width: 45, height: 65}} onPress={() => this.props.navigation.navigate("Profile")}>{/*This marks a clickable outline for the profile icon*/}
                             <Image source={Constants.img.profile} style={styles.profile}/>{/*This renders the profile icon*/}
                         </TouchableOpacity>
                         <Text style={styles.welcomeText}>Hi, {this.state.user.displayName}</Text>{/*This renders the welcome text along with name of user*/}

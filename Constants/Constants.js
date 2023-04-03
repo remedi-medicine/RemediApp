@@ -36,6 +36,12 @@ const Constants = {
 
         welcomeBack : require('../assets/images/welcome-back.png'),
 
+        billing : require('../assets/images/billing.png'),
+        faq : require('../assets/images/faq.png'),
+        logout : require('../assets/images/logout.png'),
+        savedForLater : require('../assets/images/saved-for-later.png'),
+        myOrders : require('../assets/images/my-orders.png'),
+
         banner: [require('../assets/images/banner-1.jpg'), require('../assets/images/banner-2.jpg'), require('../assets/images/banner-3.png')],
     },
     //This is the list of fonts used in the app
