@@ -23,6 +23,7 @@ const Constants = {
         rightArrow : require('../assets/images/right-arrow.png'),
         rightArrowTrans : require('../assets/images/right-arrow-trans.png'),
         edit: require('../assets/images/edit.png'),
+        backArrow: require('../assets/images/back-arrow.png'),
 
         home0 : require('../assets/images/home-deselected.png'),
         home1 : require('../assets/images/home-selected.png'),
@@ -41,6 +42,10 @@ const Constants = {
         logout : require('../assets/images/logout.png'),
         savedForLater : require('../assets/images/saved-for-later.png'),
         myOrders : require('../assets/images/my-orders.png'),
+
+        plus: require('../assets/images/plus.png'),
+        minus: require('../assets/images/minus.png'),
+        delete: require('../assets/images/delete.png'),
 
         banner: [require('../assets/images/banner-1.jpg'), require('../assets/images/banner-2.jpg'), require('../assets/images/banner-3.png')],
     },

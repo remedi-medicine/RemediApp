@@ -330,8 +330,8 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
     },
     searchIcon: {
-        height: 14,
-        width: 17,
+        height: 15,
+        width: 15,
         marginStart: 15,
     },
     searchText: {
