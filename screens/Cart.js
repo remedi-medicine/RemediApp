@@ -232,7 +232,7 @@ const App = ({navigation}) => {
                             marginBottom: 20,
 
                         }}
-                        label="BUY NOW"
+                        label="Add To Cart"
                         label2="₹36"
                         onPress={() => navigation.navigate("MyCart")}
                     />

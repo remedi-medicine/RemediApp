@@ -26,6 +26,9 @@ const Constants = {
         profile0 : require('../assets/images/profile-deselected.png'),
         profile1 : require('../assets/images/profile-selected.png'),
         cart : require('../assets/images/cart.png'),
+        savedLater: require('../assets/images/savedflater.png'),
+        faq: require('../assets/images/faq.png'),
+        backArrow: require('../assets/images/Vector.png'),
 
         banner: [require('../assets/images/banner-1.jpg'), require('../assets/images/banner-2.jpg'), require('../assets/images/banner-3.png')],
     },
