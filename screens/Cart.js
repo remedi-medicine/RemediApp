@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, ScrollView, Image, TouchableOpacity, Pressable, Text, Animated } from "react-native";
 import { withSafeAreaInsets } from "react-native-safe-area-context";
