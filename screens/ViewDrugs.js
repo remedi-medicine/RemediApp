@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, View, Text, FlatList, Modal, Image, TouchableOpacity, ToastAndroid } from "react-native";
 import Constants from "../Constants/Constants";
+import Header from "../components/Header";
 
 import auth from '@react-native-firebase/auth';
 import { firebase } from '@react-native-firebase/database';
@@ -35,7 +36,6 @@ export default class Cart extends React.Component {
         let uid = user.uid;
         userData.child(uid).child('MyCart').orderByKey().on('value', (snapshot) => {
             userCart = snapshot.val();
-            console.log(userCart);
             this.setState({showLoading1: false});})
         remediData.child('DrugList').on('value', (snapshot) => {
             DrugList = snapshot.val();
@@ -108,7 +108,7 @@ export default class Cart extends React.Component {
         return(
             <>
                 <View style={styles.container}>
-                    <Text style={styles.text}>View Drugs</Text>
+                  <Header title="All Products" onBack={() => this.props.navigation.goBack()}/>
                     <FlatList
                         data={Object.keys(DrugList)}
                         renderItem={({item}) => this.renderDrugList(item)}
