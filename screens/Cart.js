@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text, Modal, ToastAndroid, FlatList, Image, TouchableOpacity, ScrollView } from "react-native";
+import { StyleSheet, View, Text, Modal, ToastAndroid, FlatList, Image, TouchableOpacity, ScrollView, Pressable } from "react-native";
 import Constants from "../Constants/Constants";
 import Header from "../components/Header";
 
@@ -175,6 +175,13 @@ export default class Cart extends React.Component {
               </View>
             </View>
             <View style={{height: 5, width: 5, backgroundColor: Constants.colors.centralGray, alignSelf: 'center', borderRadius: 5, marginVertical: 15}}/>
+            <View style={{paddingVertical: 15, width: '90%', alignSelf: 'center'}}>
+              <Text style={styles.heading}>Other Details</Text>
+              <Text style={{fontFamily: Constants.fonts.regular, color: Constants.colors.black, fontSize: 10, marginHorizontal: 20, textAlign: 'justify'}}>Remedi is a technology platform to facilitate transaction of business. The products and services are offered for sale by the sellers. For details read our terms and conditions.</Text>
+            </View>
+            <Pressable style={styles.continueButton}>
+              <Text style={styles.continueText}>Continue with Payment</Text>
+            </Pressable>
           </ScrollView>
         </View>
         <Modal
@@ -281,6 +288,23 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'space-between',
     width: '90%'
+  },
+  continueButton: {
+      width: '75%',
+      height: 60,
+      backgroundColor: Constants.colors.primaryGreen,
+      borderRadius: 20,
+      alignSelf: 'center',
+      fontFamily: Constants.fonts.regular,
+      fontSize: 16,
+      color: Constants.colors.white,
+      justifyContent: 'center',
+      alignItems: 'center',
+  },
+  continueText: {
+      fontSize: 20,
+      fontFamily: Constants.fonts.bold,
+      color: Constants.colors.white,
   },
   modalContainer: {
       flex: 1,
