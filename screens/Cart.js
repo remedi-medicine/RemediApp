@@ -39,7 +39,6 @@ export default class Cart extends React.Component {
       this.setState({showLoading1: false});})
     remediData.child('DrugList').on('value', (snapshot) => {
       DrugList = snapshot.val();
-      console.log("TYPE: ",typeof(DrugList));
       this.setState({showLoading2: false});})
   }
 
@@ -51,17 +50,17 @@ export default class Cart extends React.Component {
 
   renderCartList = (drugID) => {
     let drug = DrugList[drugID];
-    console.log("Price: ", drug.price, "Quantity: ", userCart[drugID], "Total: ", drug.price * userCart[drugID])
+    console.log("Price: ", drug?.price, "Quantity: ", userCart[drugID], "Total: ", drug?.price * userCart[drugID])
     return (
       <> 
         <View style={styles.drugView}>
           <View style={styles.drugImgView}>
-            <Image source={{uri: drug.image}} style={styles.drugImg}/>
+            <Image source={{uri: drug?.image}} style={styles.drugImg}/>
           </View>
           <View style={styles.drugTextView}>
-            <Text style={styles.drugNameText} numberOfLines={1}>{drug.name}</Text>
-            <Text style={styles.drugMfgText} numberOfLines={1}>{drug.manufacturer}</Text>
-            <Text style={styles.drugPriceText} numberOfLines={1}>₹{drug.price}</Text>
+            <Text style={styles.drugNameText} numberOfLines={1}>{drug?.name}</Text>
+            <Text style={styles.drugMfgText} numberOfLines={1}>{drug?.manufacturer}</Text>
+            <Text style={styles.drugPriceText} numberOfLines={1}>₹{drug?.price}</Text>
           </View>
           <View style={{position: 'absolute', bottom: 15, right: 20}}>
             <View style={[styles.cartButton, {borderColor: Constants.colors.primaryGreen, borderWidth: 1, flexDirection: 'row'}]}>
@@ -225,61 +224,60 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   drugView: {
-      width: '90%',
-      alignSelf: 'center',
-      height: 115,
-      flex: 1,
-      flexDirection: 'row',
+    width: '90%',
+    alignSelf: 'center',
+    height: 115,
+    flex: 1,
+    flexDirection: 'row',
   },
   drugImgView: {
-      width: 80,
-      height: 80,
-      // backgroundColor: Constants.colors.primaryGreen,
-      alignSelf: 'center',
+    width: 80,
+    height: 80,
+    alignSelf: 'center',
   },
   drugImg: {
-      width: 80,
-      height: 80,
-      resizeMode: 'contain',
+    width: 80,
+    height: 80,
+    resizeMode: 'contain',
   },
   drugTextView: {
-      width: '70%',
-      marginVertical: 20,
-      marginHorizontal: 20,
+    width: '70%',
+    marginVertical: 20,
+    marginHorizontal: 20,
   },
   drugNameText: {
-      color: Constants.colors.black,
-      fontFamily: Constants.fonts.bold,
-      fontSize: 16
+    color: Constants.colors.black,
+    fontFamily: Constants.fonts.bold,
+    fontSize: 16
   },
   drugMfgText: {
-      color: Constants.colors.black,
-      fontFamily: Constants.fonts.light,
-      fontSize: 12
+    color: Constants.colors.black,
+    fontFamily: Constants.fonts.light,
+    fontSize: 12
   },
   drugPriceText: {
-      color: Constants.colors.primaryGreen,
-      fontFamily: Constants.fonts.bold,
-      fontSize: 16
+    color: Constants.colors.primaryGreen,
+    fontFamily: Constants.fonts.bold,
+    fontSize: 16
   },
   separator: {
-      height: 1,
-      backgroundColor: "rgba(9, 28, 63, 0.5)",
-      width: '90%',
-      alignSelf: "center",
+    height: 1,
+    backgroundColor: "rgba(9, 28, 63, 0.5)",
+    width: '90%',
+    alignSelf: "center",
   },
   cartButton: {
-      width: 80,
-      height: 30,
-      borderRadius: 10,
-      justifyContent: 'center',
-      alignItems: 'center',
+    width: 80,
+    height: 30,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cartBtnIcons: {
-      width: 12,
-      height: 12,
-      resizeMode: 'contain',
-      marginHorizontal: 15
+    width: 12,
+    height: 12,
+    resizeMode: 'contain',
+    marginHorizontal: 15
   },
   addItemsView: {
     borderTopColor: Constants.colors.black,
@@ -290,34 +288,34 @@ const styles = StyleSheet.create({
     width: '90%'
   },
   continueButton: {
-      width: '75%',
-      height: 60,
-      backgroundColor: Constants.colors.primaryGreen,
-      borderRadius: 20,
-      alignSelf: 'center',
-      fontFamily: Constants.fonts.regular,
-      fontSize: 16,
-      color: Constants.colors.white,
-      justifyContent: 'center',
-      alignItems: 'center',
+    width: '75%',
+    height: 60,
+    backgroundColor: Constants.colors.primaryGreen,
+    borderRadius: 20,
+    alignSelf: 'center',
+    fontFamily: Constants.fonts.regular,
+    fontSize: 16,
+    color: Constants.colors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   continueText: {
-      fontSize: 20,
-      fontFamily: Constants.fonts.bold,
-      color: Constants.colors.white,
+    fontSize: 20,
+    fontFamily: Constants.fonts.bold,
+    color: Constants.colors.white,
   },
   modalContainer: {
-      flex: 1,
-      backgroundColor: 'rgba(0,0,0,0.5)',
-      justifyContent: 'center',
-      alignItems: 'center',
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   modal: {
-      backgroundColor: Constants.colors.white,
-      borderRadius: 20,
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 20,
-      flexDirection: 'row'
+    backgroundColor: Constants.colors.white,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    flexDirection: 'row'
   },
 });

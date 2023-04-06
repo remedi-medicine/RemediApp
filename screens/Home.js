@@ -68,6 +68,7 @@ export default class Home extends React.Component {
       position => {
         latitude = position.coords.latitude,
         longitude = position.coords.longitude,
+        console.log("GeoLocation: ", latitude, longitude)
         fetch(`https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=bf089be2d5324c1da0876446fff7d004`)
           .then(response => response.json())
           .then(data => {
@@ -202,7 +203,7 @@ export default class Home extends React.Component {
               data={this.state.deal}
               style={{marginTop: 8, marginHorizontal: 15, minHeight: 275}}
               renderItem={({item, index}) => (this.renderDeal(item, index))}/>
-                    
+            
             <View style={{width: '100%'}}>
               <Text style={[styles.heading, {marginTop: 24}]}>
                 All Products at {appName}
