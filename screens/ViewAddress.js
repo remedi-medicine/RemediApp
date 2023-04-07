@@ -8,6 +8,8 @@ import { firebase } from '@react-native-firebase/database';
 
 import * as Progress from "react-native-progress";
 
+import RazorpayCheckout from "react-native-razorpay";
+
 const userData = firebase
   .app()
   .database('https://remedi---instant-medicine-default-rtdb.asia-southeast1.firebasedatabase.app/')
@@ -31,7 +33,7 @@ export default class Notification extends React.Component {
     let user = this.state.user;
     let uid = user.uid;
     userData.child(uid).child('MyAddress').on('value', (snapshot) => {
-      Address = snapshot.val()? snapshot.val() : [];
+      snapshot.val()? Address = snapshot.val() : this.props.navigation.push("AddAddress");
       this.setState({showLoading: false});
     });
   }
@@ -62,6 +64,31 @@ export default class Notification extends React.Component {
     );
   }
 
+  proceedToPayment = () => {
+    if(this.state.selectedAddress == -1) {
+      ToastAndroid.show("Please select an address", ToastAndroid.SHORT);
+      return;
+    }
+    let options = {
+      currency: "INR",
+      key: "rzp_test_nFKekgDUCv55L4",
+      amount: this.props.route.params.total*100,
+      name: "Remedi",
+      prefill: {
+        email: this.state.user.email,
+        contact: this.state.mobile,
+        name: this.state.user.displayName,
+      },
+      theme: {color: Constants.colors.primaryGreen},
+    };
+    RazorpayCheckout.open(options)
+      .then((data) => {
+        ToastAndroid.show("Payment Successful: "+data.razorpay_payment_id, ToastAndroid.SHORT);})
+      .catch((error) => {
+        ToastAndroid.show("Payment Failed: "+error.code+" | "+error.description, ToastAndroid.SHORT);}
+      );
+  }
+
   render() {
     return(
       <>
@@ -79,7 +106,7 @@ export default class Notification extends React.Component {
               showsVerticalScrollIndicator
               ItemSeparatorComponent={() => <View style={{height: 20}}/>}
             />
-            <Pressable style={styles.continueButton} onPress={() => ToastAndroid.show('Continue to Payment', ToastAndroid.SHORT)}>
+            <Pressable style={styles.continueButton} onPress={() => this.proceedToPayment()}>
               <Text style={styles.continueText}>Continue to Payment</Text>
             </Pressable>
           </ScrollView>

@@ -132,16 +132,25 @@ export default class Cart extends React.Component {
 
   goToAddress = () => {
     this.saveCart();
-    let user = this.state.user;
-    let uid = user.uid;
-    userData.child(uid).child('MyAddress').on('value', (snapshot) => {
-      let address = snapshot.val();
-      if (address == null) {
-        this.props.navigation.navigate("AddAddress");
-      } else {
-        this.props.navigation.navigate("ViewAddress");
-      }
+    fetch(`https://api.razorpay.com/v1/orders`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        amount: this.getTotal() * 100,
+        currency: 'INR',
+        notes: userCart,
+      }),
     })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      this.props.navigation.push("ViewAddress", {orderID: data.id, total: this.getTotal()});
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   }
 
   render() {
