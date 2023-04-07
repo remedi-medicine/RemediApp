@@ -35,7 +35,7 @@ export default class Cart extends React.Component {
     let user = this.state.user;
     let uid = user.uid;
     userData.child(uid).child('MyCart').orderByKey().on('value', (snapshot) => {
-      userCart = snapshot.val();
+      snapshot.val() ? userCart = snapshot.val() : userCart = {};
       this.setState({showLoading1: false});})
     remediData.child('DrugList').on('value', (snapshot) => {
       DrugList = snapshot.val();

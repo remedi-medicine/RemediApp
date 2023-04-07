@@ -35,7 +35,7 @@ export default class Cart extends React.Component {
     let user = this.state.user;
     let uid = user.uid;
     userData.child(uid).child('MyCart').orderByKey().on('value', (snapshot) => {
-      userCart = snapshot.val();
+      snapshot.val() ? userCart = snapshot.val() : userCart = {};
       this.setState({showLoading1: false});})
     remediData.child('DrugList').on('value', (snapshot) => {
       DrugList = snapshot.val();
@@ -43,6 +43,10 @@ export default class Cart extends React.Component {
   }
 
   componentWillUnmount = () => {
+    this.saveCart();
+  }
+
+  saveCart = () => {
     let user = this.state.user;
     let uid = user.uid;
     userData.child(uid).child('MyCart').set(userCart).then(() => {ToastAndroid.show('Cart Updated', ToastAndroid.SHORT);});
@@ -98,7 +102,7 @@ export default class Cart extends React.Component {
     userTotal = 0;
     for (let cartCounter=0; cartCounter<Object.keys(userCart).length; cartCounter++) {
       let drugID = Object.keys(userCart)[cartCounter];
-      userTotal += DrugList[drugID].price * userCart[drugID];
+      userTotal += DrugList[drugID]?.price * userCart[drugID];
     }
     return userTotal;
   }
@@ -124,6 +128,20 @@ export default class Cart extends React.Component {
   getTotal = () => {
     total = userTotal + deliveryCharge - discount;
     return total;
+  }
+
+  goToAddress = () => {
+    this.saveCart();
+    let user = this.state.user;
+    let uid = user.uid;
+    userData.child(uid).child('MyAddress').on('value', (snapshot) => {
+      let address = snapshot.val();
+      if (address == null) {
+        this.props.navigation.navigate("AddAddress");
+      } else {
+        this.props.navigation.navigate("ViewAddress");
+      }
+    })
   }
 
   render() {
@@ -178,8 +196,8 @@ export default class Cart extends React.Component {
               <Text style={styles.heading}>Other Details</Text>
               <Text style={{fontFamily: Constants.fonts.regular, color: Constants.colors.black, fontSize: 10, marginHorizontal: 20, textAlign: 'justify'}}>Remedi is a technology platform to facilitate transaction of business. The products and services are offered for sale by the sellers. For details read our terms and conditions.</Text>
             </View>
-            <Pressable style={styles.continueButton}>
-              <Text style={styles.continueText}>Continue with Payment</Text>
+            <Pressable style={styles.continueButton} onPress={() => this.goToAddress()}>
+              <Text style={styles.continueText}>Select Address</Text>
             </Pressable>
           </ScrollView>
         </View>

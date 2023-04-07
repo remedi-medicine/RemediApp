@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, View, ScrollView, TouchableOpacity, Image, Text } from "react-native";
 import Constants from "../Constants/Constants";
+import Header from "../components/Header";
 
 import auth from '@react-native-firebase/auth';
 
@@ -72,12 +73,13 @@ renderProfileSection() {
     render() {
         return(
             <>
-                <View style={{flex: 1, backgroundColor: 'white',}}>
-                    <ScrollView contentContainerStyle={{paddingHorizontal: 20,}}>
-                        {this.renderProfileCard()}
-                        {this.renderProfileSection()}
-                    </ScrollView>
-                </View>
+              <View style={{flex: 1, backgroundColor: 'white',}}>
+                <Header title={"My Profile"} onBack={() => this.props.navigation.goBack()} showSearch={false}/>
+                <ScrollView contentContainerStyle={{paddingHorizontal: 20,}}>
+                  {this.renderProfileCard()}
+                  {this.renderProfileSection()}
+                </ScrollView>
+              </View>
             </>
         );
     }

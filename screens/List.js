@@ -139,7 +139,7 @@ export default class List extends React.Component {
     return(
       <>
         <View style={styles.container}>
-                <Header title={"My Lists"} onBack={() => this.props.navigation.goBack()}/>
+                <Header title={"My Lists"} onBack={() => this.props.navigation.goBack()} showSearch={false}/>
                 <ScrollView style={styles.container}>{/*This is the main container of the screen - made Scrollable for user experience*/}
                     {this.renderProfileCard()}
                     {/*This is the FlatList which is used to display the list of names of the lists created by the user */}

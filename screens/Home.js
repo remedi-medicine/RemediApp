@@ -216,7 +216,7 @@ export default class Home extends React.Component {
             {/*This creates a flatlist of all available drugs*/}
             <FlatList
               horizontal
-              data={Object.keys(DrugList)}
+              data={Object.keys(DrugList).slice(5)}
               style={{marginTop: 8, marginHorizontal: 15, minHeight: 275}}
               renderItem={({item, index}) => (this.renderAllDrugs(item, index))}/>
             <View style={{height: 100}}/>
