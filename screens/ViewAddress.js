@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text, FlatList, Modal, Dimensions, TouchableOpacity, Pressable, ToastAndroid, ScrollView } from "react-native";
+import { StyleSheet, View, Text, FlatList, Modal, Dimensions, TouchableOpacity, Pressable, ToastAndroid, ScrollView, Image } from "react-native";
 import Constants from "../Constants/Constants";
 import Header from "../components/Header";
 
@@ -38,10 +38,15 @@ export default class Notification extends React.Component {
     });
   }
 
+  componentWillUnmount = () => {
+    let user = this.state.user;
+    let uid = user.uid;
+    userData.child(uid).child('MyAddress').set(Address).then(() => {ToastAndroid.show('Address Updated', ToastAndroid.SHORT);});
+  }
+
   renderAddress = (item, index) => {
     return(
       <>
-      {/* <Text style={{color: Constants.colors.primaryBlue}}>{JSON.stringify(item)}</Text> */}
       <TouchableOpacity style={{width: '90%', 
       borderColor: this.state.selectedAddress == index ? Constants.colors.primaryGreen : Constants.colors.black, 
       borderRadius: 20, borderWidth: this.state.selectedAddress == index ? 3 : 1,
@@ -51,13 +56,21 @@ export default class Notification extends React.Component {
           {borderColor: this.state.selectedAddress == index ? Constants.colors.primaryGreen : Constants.colors.black,
           backgroundColor: this.state.selectedAddress == index ? Constants.colors.primaryGreen : Constants.colors.white,}]}
           onPress={() => {this.setState({selectedAddress: this.state.selectedAddress == index ? -1 : index})}}/>
-        <View style={{width: 0.78*width, paddingVertical: 10}}>
+        <View style={{width: 0.68*width, paddingVertical: 10}}>
           <Text style={[styles.heading, {fontSize: 20}]}>{item.billTo}</Text>
           <Text style={styles.text}>{item.addressLine1}</Text>
           <Text style={styles.text}>{item.addressLine2}</Text>
           <Text style={styles.text}>{item.city} - {item.pincode}</Text>
           <Text style={styles.text}>{item.mobile}</Text>
           <Text style={styles.text}>{item.addressType}</Text>
+        </View>
+        <View style={{justifyContent: 'space-evenly'}}>
+        <TouchableOpacity>
+          <Image source={Constants.img.edit} style={{width: 20, height: 20, resizeMode: 'contain', tintColor: Constants.colors.primaryGreen}}/>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => {Address.splice(index, 1); ToastAndroid.show("Address Deleted", ToastAndroid.SHORT); this.forceUpdate()}}>
+          <Image source={Constants.img.delete} style={{width: 20, height: 20, resizeMode: 'contain', tintColor: Constants.colors.primaryGreen}}/>
+        </TouchableOpacity>
         </View>
       </TouchableOpacity>
       </>
@@ -109,6 +122,7 @@ export default class Notification extends React.Component {
             <Pressable style={styles.continueButton} onPress={() => this.proceedToPayment()}>
               <Text style={styles.continueText}>Continue to Payment</Text>
             </Pressable>
+            <View style={{height: 10}}/>
           </ScrollView>
         </View>
         <Modal

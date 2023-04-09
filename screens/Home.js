@@ -1,5 +1,5 @@
-import React from "react";
-import { StyleSheet, ScrollView, View, Text, StatusBar, Image, TouchableOpacity, FlatList, TextInput, Modal, PermissionsAndroid, Alert } from "react-native";
+import React, { useCallback } from "react";
+import { StyleSheet, ScrollView, View, Text, StatusBar, Image, TouchableOpacity, FlatList, TextInput, Modal, PermissionsAndroid, Alert, RefreshControl } from "react-native";
 import { Dimensions } from "react-native";
 
 import auth from '@react-native-firebase/auth';
@@ -30,6 +30,7 @@ export default class Home extends React.Component {
       deal: [],
       showLoading1: true,
       showLoading2: true,
+      refreshing: false,
     },
     this.category = [
       require('../assets/images/dental.png'),
@@ -61,6 +62,18 @@ export default class Home extends React.Component {
         )
       });
     }
+
+  //This function gets the data from the database
+  _getData = () => {
+    remediData.child('DrugList').on('value', (snapshot) => {
+      DrugList = snapshot.val();
+      this.setState({showLoading1: false});
+    });
+    
+    remediData.child('Deals').once('value').then(snapshot => {
+      this.setState({deal: snapshot.val(), showLoading2: false});
+    });
+  }
 
   _getCurrentLocation = () => {
     let latitude=0, longitude=0;
@@ -119,18 +132,19 @@ export default class Home extends React.Component {
 
   //This function renders the deals of the day
   //Function is called by FlatList
-  renderDeal = (item, index) => {
+  renderDeal = (dealDrugID, index) => {
+    let drug = DrugList[dealDrugID];
     return (
-      <TouchableOpacity style={styles.deal} onPress={() => {this.props.navigation.navigate("Product")}}>{/*This marks a clickable outline for the deal*/}
+      <TouchableOpacity style={styles.deal} onPress={() => {this.props.navigation.navigate("Product", {drugID: dealDrugID})}}>{/*This marks a clickable outline for the deal*/}
         <View style={styles.dealImageView}>
-          <Image source={{uri: item.image}} style={styles.dealImage}/>{/*This renders the deal image*/}
+          <Image source={{uri: drug?.image}} style={styles.dealImage}/>{/*This renders the deal image*/}
         </View>
         <View style={styles.dealText}>
-          <Text style={styles.dealTitle} numberOfLines={2}>{item.title}</Text>{/*This renders the deal title*/}
-          <Text style={styles.dealPrice}>₹ {item.price}</Text>{/*This renders the deal price*/}
+          <Text style={styles.dealTitle} numberOfLines={2}>{drug?.name}</Text>{/*This renders the deal title*/}
+          <Text style={styles.dealPrice}>₹ {drug?.price}</Text>{/*This renders the deal price*/}
         </View>
         <View style={styles.viewDealRating}>
-          <Text style={styles.dealRating}>{item.rating}</Text>{/*This renders the deal rating*/}
+          <Text style={styles.dealRating}>{drug?.rating}</Text>{/*This renders the deal rating*/}
         </View>
       </TouchableOpacity>
     );
@@ -138,10 +152,10 @@ export default class Home extends React.Component {
 
   //This function renders all the available drugs
   //Function is called by FlatList
-  renderAllDrugs = (item, index) => {
-    item = DrugList[item];
+  renderAllDrugs = (drugID, index) => {
+    item = DrugList[drugID];
     return (
-      <TouchableOpacity style={styles.deal} onPress={() => {this.props.navigation.navigate("Product")}}>{/*This marks a clickable outline for the drug*/}
+      <TouchableOpacity style={styles.deal} onPress={() => {this.props.navigation.push("Product", {drugID: drugID})}}>{/*This marks a clickable outline for the drug*/}
         <View style={styles.dealImageView}>
           <Image source={{uri: item.image}} style={styles.dealImage}/>{/*This renders the drug image*/}
         </View>
@@ -162,7 +176,8 @@ export default class Home extends React.Component {
     return (
       <>
         <StatusBar backgroundColor={Constants.colors.primaryGreen} barStyle={'dark-content'}/>{/*Makes the Status Bar colour PrimaryGreen & Text in White*/}
-        <ScrollView style={styles.container} contentContainerStyle={{alignItems: 'center', justifyContent: 'flex-start',}}>{/*ScrollView is chosen so that multiple elements aren't hidden and user can scroll through the homepage */}
+        <ScrollView style={styles.container}
+        contentContainerStyle={{alignItems: 'center', justifyContent: 'flex-start',}}>{/*ScrollView is chosen so that multiple elements aren't hidden and user can scroll through the homepage */}
           <View style={styles.welcome}>{/*This is the welcome section of the homepage*/}
             <View style={styles.semicircle}/>
               <TouchableOpacity style={styles.cart} onPress={() => this.props.navigation.navigate("Cart")}>{/*This marks a clickable outline for the cart icon*/}
@@ -400,6 +415,7 @@ const styles = StyleSheet.create({
     width: 109,
     height: 120,
     alignSelf: 'center',
+    resizeMode: 'contain',
   },
   dealTitle: {
     color: Constants.colors.primaryBlue,

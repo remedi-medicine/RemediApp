@@ -1,568 +1,413 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, View, ScrollView, Image, TouchableOpacity, Pressable, Text, Animated } from "react-native";
-//import Svg, { Path } from "react-native-svg";
+import React from "react";
+import { StyleSheet, View, Text, ScrollView, Image, TouchableOpacity, ToastAndroid, FlatList, Dimensions } from "react-native";
 import Constants from "../Constants/Constants";
+import Header from "../components/Header";
 
-// Button implementation
-// const Button = ({ text, onPress, disabled }) => {
-//   return (
-//     <Pressable onPress={onPress}
-//       style={[styles.productContainer, disabled ? styles.disabledContainer : {}]}
-//       disabled={disabled}
-//     >
-//       <Text style={styles.producttext}>{text}</Text>
-//     </Pressable>
-//   )
-// };
-// Button.defaultProps = {
-//   onPress: () => { },
-//   disabled: false,
-// }
-// const onButtonPress = () => {
-//   console.warn("Pressed");
-// }
+import auth from '@react-native-firebase/auth';
+import { firebase } from '@react-native-firebase/database';
 
-// // Button.propTypes = {
-// //   text: PropTypes.string.isRequired,
-// //   onPress: PropTYpes.func,
-// //   disabled: false,
-// }
+import { AirbnbRating } from "react-native-ratings";
+import * as Progress from "react-native-progress";
+import Geolocation from 'react-native-geolocation-service';
 
-// DropDown pdt Info
-let summary = [{ id: 1, name: 'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh hjjjjjjjjjj bbbbbbbbbb' }]
+const remediData = firebase
+  .app()
+  .database('https://remedi---instant-medicine-default-rtdb.asia-southeast1.firebasedatabase.app/')
+  .ref('RemediData');
 
-const DropDown = ({
-  data = [],
-  value = {},
-  onSelect = () => { }
-}) => {
-  // const[data, setData] = useState([])
-  const [showOption, setShowOption] = useState(false)
+const userData = firebase
+  .app()
+  .database('https://remedi---instant-medicine-default-rtdb.asia-southeast1.firebasedatabase.app/')
+  .ref('UserData');
 
-  return (
-    <View style={styles.pdtContainer}>
-      <TouchableOpacity
-        style={styles.dropDown}
-        activeOpacity={0.8}
-        onPress={() => setShowOption(!showOption)}
-      >
-        <Text style={
-          {
-            color: 'black',
-            fontWeight: 'bold',
-            //fontSize: 10,
-          }
-        }>PRODUCT INFORMATION</Text>
-      </TouchableOpacity>
-      {showOption && (<View>
-        {data.map((val, i) => {
-          return (
-            <Text key={String(i)}
-              style={{
-                backgroundColor: 'white',
-                marginVertical: 0,
-                padding: 10,
-                paddingStart: 20,
-                borderRadius: 10,
-                borderWidth: 3,
-                borderColor: 'lightgray',
-                //fontWeight: 'bold',
-                alignSelf: 'stretch',
-                justifyContent: 'center',
-                alignItems: 'center',
+let userCart = {};
+const { width, height } = Dimensions.get('window');
 
-              }}>{val.name}</Text>
-          )
-        })}
-      </View>)}
-
-    </View>
-  )
-}
-
-
-//customer review
-const Star = () => {
-  return (
-    // <Svg width={24} height={22} viewBox="0 0 33 30" fill="none" {...props}>
-    //   <Path
-    //     d="M16.5 0l4.849 9.826 10.843 1.575-7.846 7.648 1.852 10.8-9.698-5.1-9.698 5.1 1.852-10.8-7.846-7.648L11.65 9.826 16.5 0z"
-    //     fill="#FFCC48"
-    //   />
-    // </Svg>
-    <Image
-      style={{ width: 24, height: 22, padding: 10 }}
-      source={{ uri: 'https://i.ibb.co/QHFccKB/Star-6.png' }}
-    />
-  );
-};
-
-const PercentageBar = ({ starText, percentage }) => {
-
-  const [animation] = useState(new Animated.Value(0));
-  useEffect(() => {
-    Animated.timing(animation, {
-      toValue: percentage,
-      duration: 500,
-    }).start();
-  }, [percentage]);
-
-  return (
-    <View
-      style={{
-        flexDirection: "row",
-      }}
-    >
-      <Text style={styles.progressText}>{starText}</Text>
-      <View style={styles.progressMiddle}>
-        <View style={styles.progressWrap}>
-          <Animated.View
-            style={[
-              styles.progressBar,
-              {
-                width: animation.interpolate({
-                  inputRange: [0, 100],
-                  outputRange: ["0%", "100%"],
-                }),
-              },
-            ]}
-          />
-        </View>
-      </View>
-      <Text style={styles.progressPercentText}>{percentage}%</Text>
-    </View>
-  );
-};
-
-
-const App = () => {
-
-  const [selectedItem, setSelectedItem] = useState(null)
-  const onSelect = (item) => {
-    setSelectedItem(item)
+export default class Notification extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      user: auth().currentUser,
+      drugID: this.props.route.params.drugID,
+      drug: {},
+      city: 'xxxxxx',
+      postcode: '000000',
+      showProductInfo: false,
+    };
   }
 
-  return (
-    <ScrollView style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <Text style={styles.text}>Cart</Text>
-        <Image
-          style={styles.imagemed}
-          source={{ uri: 'https://i.ytimg.com/vi/yikWOMtIOiQ/maxresdefault.jpg' }}
-        />
+  componentDidMount = () => {
+    this._getCurrentLocation();
+    remediData.child('DrugList').child(this.state.drugID).on('value', (snapshot) => {
+      this.setState({drug: snapshot.val()});
+    });
+    let user = this.state.user;
+    let uid = user.uid;
+    userData.child(uid).child('MyCart').orderByKey().on('value', (snapshot) => {
+      snapshot.val() ? userCart = snapshot.val() : userCart = {};
+    });
+  }
 
-        <View style={styles.medContainer}>
-          <Text style={styles.medname}> Dolo-650</Text>
-          <Text style={styles.compyname}>By Micro Labs Ltd </Text>
-        </View>
+  componentWillUnmount = () => {
+    let user = this.state.user;
+    let uid = user.uid;
+    userData.child(uid).child('MyCart').set(userCart).then(() => {ToastAndroid.show('Cart Updated', ToastAndroid.SHORT);});
+  }
 
-        <View style={styles.detailsContainer}>
-          <Text style={styles.medprice}>₹ 36  MRP Rs 73  23% Off </Text>
-          <Text style={styles.meddetails1}>15 Tablets</Text>
-          <Text style={styles.meddetails2}>        (Inclusive Of All Taxes)</Text>
-          <Text style={styles.meddetails2}>    </Text>
-        </View>
+  _getCurrentLocation = () => {
+    let latitude=0, longitude=0;
+    Geolocation.getCurrentPosition(
+      position => {
+        latitude = position.coords.latitude,
+        longitude = position.coords.longitude,
+        fetch(`https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=bf089be2d5324c1da0876446fff7d004`)
+          .then(response => response.json())
+          .then(data => {
+            this.setState({
+              city: data.results[0].components.city,
+              postcode: data.results[0].components.postcode,
+            });
+          })                
+      },
+      error => {
+        Alert.alert(error.message.toString());
+      },
+      {
+        showLocationDialog: true,
+        enableHighAccuracy: true,
+        timeout: 20000,
+        maximumAge: 0
+      }
+    );
+  }
 
-        <View style={styles.deliveryContainer}>
-          <Text style={styles.deliverytime}> Earliest Delivery by Today 7pm</Text>
-          <Text style={styles.deliverydetail}>Delivery To: 4000008, Mumbai </Text>
-        </View>
+  getDifference = () => {
+    let difference = this.state.drug.mrp - this.state.drug.price;
+    let percentage = (difference / this.state.drug.mrp) * 100;
+    return percentage>0 ? `${percentage.toFixed(0)}% off` : '';
+  }
 
-        <View style={styles.safetyContainer}>
-          <Image
-            style={styles.safety}
-            source={{ uri: 'https://i.ibb.co/chtnLBV/remidi-1.png' }}
-          />
-        </View>
-        {/* <Button text="PRODUCT INFORMATION" onPress ={onButtonPress} disabled={false}/>
-                    <DropDown/> */}
-        <DropDown
-          value={selectedItem}
-          data={summary}
-          onSelect={onSelect}
-        />
+  addToCart = (drugID) => {
+    userCart[drugID] = 1;
+    this.forceUpdate();
+  }
 
-        <View style={styles.customerreviewcontainer}>
-          <View style={styles.reviewContainer}>
-            <Text style={styles.reviewTitle}>Customer Reviews</Text>
-            <View style={styles.totalWrap}>
-              <View
-                style={{
-                  flexDirection: "row",
-                }}
-              >
-                <Star />
-                <Star />
-                <Star />
-                <Star />
-                <Star />
-              </View>
-              <Text>4.7 out of 5</Text>
-            </View>
-            <Text style={styles.amountText}>40 customer ratings</Text>
-            <View style={{ marginTop: 40 }}>
-              <View style={styles.spacer}>
-                <PercentageBar starText="5 star" percentage={68} />
-              </View>
-              <View style={styles.spacer}>
-                <PercentageBar starText="4 star" percentage={25} />
-              </View>
-              <View style={styles.spacer}>
-                <PercentageBar starText="3 star" percentage={4} />
-              </View>
-              <View style={styles.spacer}>
-                <PercentageBar starText="2 star" percentage={2} />
-              </View>
-              <View style={styles.spacer}>
-                <PercentageBar starText="1 star" percentage={1} />
-              </View>
-            </View>
+  deleteFromCart = (drugID) => {
+    delete userCart[drugID];
+    this.forceUpdate();
+  }
 
-            <TouchableOpacity>
-              <Text style={styles.howWeCalculate}>How do we calculate ratings?</Text>
-            </TouchableOpacity>
+  updateCartCount = (drugID, count) => {
+    userCart[drugID] += count;
+    this.forceUpdate();
+  }
 
+  renderReview = (review, reviewIndex) => {
+    return(
+      <>
+        <View style={{flexDirection: 'row'}}>
+          <View style={{width: 40, height: 40, borderRadius: 41, backgroundColor: Constants.colors.centralGray, justifyContent: 'center'}}>
+            <Text style={{fontFamily: Constants.fonts.bold, fontSize: 30, color: Constants.colors.primaryBlue, alignSelf: 'center', top: -5}}>{review.postedby.charAt(0).toUpperCase()}</Text>
+          </View>
+          <View style={{marginHorizontal: 10}}>
+            <Text style={{fontFamily: Constants.fonts.bold, fontSize: 16, color: Constants.colors.primaryBlue}}>{review.postedby}</Text>
+            <Text style={{fontFamily: Constants.fonts.light, fontSize: 10, color: Constants.colors.black}}>{review.postedat}</Text>
           </View>
         </View>
+        <View style={{alignSelf: 'flex-start', marginVertical: 5}}>
+        <AirbnbRating
+          count={5}
+          defaultRating={review.rating}
+          size={14}
+          isDisabled={true}
+          selectedColor={Constants.colors.primaryGreen}
+          showRating={false}
+        /></View>
+        <Text style={{fontFamily: Constants.fonts.regular, fontSize: 12, color: Constants.colors.black}}>{review.review}</Text>
+      </>
+    );
+  }
 
+  render() {
+    return(
+      <>
+        <View style={styles.container}>
+          <Header title={this.state.drug.name} showSearch={false} onBack={() => this.props.navigation.goBack()}/>
+          <ScrollView style={[styles.container, {padding: 20, paddingTop:10}]} contentContainerStyle={{alignItems: 'flex-start'}}>
+            <Image source={{uri: this.state.drug.image}} style={styles.image}/>
+            <Text style={styles.name}>{this.state.drug.name}</Text>
+            <Text style={styles.manufacturer}>By {this.state.drug.manufacturer}</Text>
+            <View style={{marginHorizontal: 10, flexDirection: 'row', marginVertical: 10}}>
+              <AirbnbRating
+                count={5}
+                defaultRating={this.state.drug.rating}
+                size={20}
+                isDisabled={true}
+                selectedColor={Constants.colors.primaryGreen}
+                showRating={false}
+              />
+              <Text style={{fontSize: 16, fontFamily: Constants.fonts.regular, color: Constants.colors.primaryGreen, marginHorizontal: 10}}>({this.state.drug.totalRatings} Ratings)</Text>
+            </View>
+            <View style={{marginHorizontal: 10, flexDirection: 'row', width: '100%'}}>
+              <Text style={styles.price}>₹{this.state.drug.price}</Text>
+              <Text style={styles.mrp}>₹{this.state.drug.mrp}</Text>
+              <Text style={styles.difference}>{this.getDifference()}</Text>
 
-
-        {/* <View style={styles.deliveryContainer}>
-          <Text style={styles.deliverytime}> Earliest Delivery by Today 7pm</Text>
-          <Text style={styles.deliverydetail}>Delivery To: 4000008, Mumbai </Text>
+              { userCart[this.state.drugID] ? 
+                <View style={[styles.cartButton, {borderColor: Constants.colors.primaryGreen, borderWidth: 1, flexDirection: 'row'}]}>
+                  { userCart[this.state.drugID] == 1 ?
+                    <TouchableOpacity onPress={() => this.deleteFromCart(this.state.drugID)}>
+                      <Image source={Constants.img.delete} style={styles.cartBtnIcons}/>
+                    </TouchableOpacity>
+                  :
+                    <TouchableOpacity onPress={() => this.updateCartCount(this.state.drugID, -1)}>
+                      <Image source={Constants.img.minus} style={styles.cartBtnIcons}/>
+                    </TouchableOpacity>
+                  }
+                  <Text style={{color: Constants.colors.black, fontFamily: Constants.fonts.semibold, fontSize: 15}}>{userCart[this.state.drugID]}</Text>
+                  <TouchableOpacity onPress={() => this.updateCartCount(this.state.drugID, +1)}>
+                    <Image source={Constants.img.plus} style={styles.cartBtnIcons}/>
+                  </TouchableOpacity>
+                </View>
+              :
+                <TouchableOpacity style={[styles.cartButton, {backgroundColor: Constants.colors.primaryGreen}]} onPress={() => this.addToCart(this.state.drugID)}>
+                  <Text style={{color: Constants.colors.white, fontFamily: Constants.fonts.semibold, fontSize: 15,}}>Add</Text>
+                </TouchableOpacity>
+              }
+            </View>
+            <View style={{height: 5, width: 5, backgroundColor: Constants.colors.centralGray, alignSelf: 'center', borderRadius: 5, marginVertical: 15}}/>
+            <Text style={styles.deliveryHeading}><Text>Earliest Delivery by </Text><Text style={{color: Constants.colors.primaryGreen}}>Today, 07:00 PM</Text></Text>
+            <Text style={styles.deliveryText}>Delivering To: {this.state.postcode}, {this.state.city}</Text>
+            <View style={{height: 5, width: 5, backgroundColor: Constants.colors.centralGray, alignSelf: 'center', borderRadius: 5, marginVertical: 15}}/>
+            <View style={{justifyContent: 'space-evenly', alignContent: 'center', width: '100%', flexDirection: 'row'}}>
+              <View>
+                <Image source={Constants.img.genuine} style={styles.guaranteeIcon}/>
+                <Text style={styles.guaranteeText}>100% Genuine Products</Text>
+              </View>
+              <View>
+                <Image source={Constants.img.safe} style={styles.guaranteeIcon}/>
+                <Text style={styles.guaranteeText}>Safe & Secure Payments</Text>
+              </View>
+              <View>
+                <Image source={Constants.img.contactless} style={styles.guaranteeIcon}/>
+                <Text style={styles.guaranteeText}>Contactless Delivery</Text>
+              </View>
+              <View>
+                <Image source={Constants.img.sanitised} style={styles.guaranteeIcon}/>
+                <Text style={styles.guaranteeText}>Fully Sanitised Facilities</Text>
+              </View>
+            </View>
+            <View style={styles.roundSeparator}/>
+            <TouchableOpacity style={{justifyContent: 'space-between', width: '100%', flexDirection: 'row'}} onPress={() => this.setState({showProductInfo: !this.state.showProductInfo})}>
+              <Text style={styles.heading}>PRODUCT INFORMATION</Text>
+              <Image source={this.state.showProductInfo ? Constants.img.upArrow: Constants.img.downArrow} style={styles.headingArrow}/>
+            </TouchableOpacity>
+            {this.state.showProductInfo && <FlatList
+              data={this.state.drug.product_info}
+              renderItem={({item, index}) => <Text style={[styles.productInfo, {fontFamily: this.state.drug.product_info[index-1]==" "? Constants.fonts.bold:Constants.fonts.regular}]}>{item}</Text>}
+              keyExtractor={item => item}
+            />}
+            <View style={styles.roundSeparator}/>
+            <Text style={styles.heading}>CUSTOMER REVIEWS</Text>
+            <View style={{flexDirection: 'row', width: '100%'}}>
+              <View style={{justifyContent: 'center', alignSelf: 'center', alignItems: 'center'}}>
+                <Text style={{fontFamily: Constants.fonts.bold, fontSize: 15, color: Constants.colors.black, marginHorizontal: 10}}><Text style={{fontSize: 30}}>{this.state.drug.rating}</Text>/5</Text>
+                <AirbnbRating
+                  count={5}
+                  defaultRating={this.state.drug.rating}
+                  size={14}
+                  isDisabled={true}
+                  selectedColor={Constants.colors.primaryGreen}
+                  showRating={false}
+                />
+                <Text style={{fontSize: 10, fontFamily: Constants.fonts.light, color: Constants.colors.black, marginHorizontal: 10}}>{this.state.drug.totalRatings} Ratings</Text>
+              </View>
+              <View>
+                <View style={{flexDirection: 'row',}}>
+                  <Text style={{fontSize: 10, fontFamily: Constants.fonts.light, color: Constants.colors.black, marginHorizontal: 10, width: 6, textAlign: 'right'}}>5</Text>
+                  <Progress.Bar progress={this.state.drug.starRating ? this.state.drug.starRating[5]/100: 0} color={Constants.colors.primaryGreen} style={{height: 7, alignSelf: 'center'}}/>
+                  <Text style={{fontSize: 10, fontFamily: Constants.fonts.light, color: Constants.colors.black, marginHorizontal: 10}}>{this.state.drug.starRating ? this.state.drug.starRating[5]: 0}%</Text>
+                </View>
+                <View style={{flexDirection: 'row',}}>
+                  <Text style={{fontSize: 10, fontFamily: Constants.fonts.light, color: Constants.colors.black, marginHorizontal: 10, width: 6, textAlign: 'right'}}>4</Text>
+                  <Progress.Bar progress={this.state.drug.starRating ? this.state.drug.starRating[4]/100: 0} color={Constants.colors.primaryGreen} style={{height: 7, alignSelf: 'center'}}/>
+                  <Text style={{fontSize: 10, fontFamily: Constants.fonts.light, color: Constants.colors.black, marginHorizontal: 10}}>{this.state.drug.starRating ? this.state.drug.starRating[4]: 0}%</Text>
+                </View>
+                <View style={{flexDirection: 'row',}}>
+                  <Text style={{fontSize: 10, fontFamily: Constants.fonts.light, color: Constants.colors.black, marginHorizontal: 10, width: 6, textAlign: 'right'}}>3</Text>
+                  <Progress.Bar progress={this.state.drug.starRating ? this.state.drug.starRating[3]/100: 0} color={Constants.colors.primaryGreen} style={{height: 7, alignSelf: 'center'}}/>
+                  <Text style={{fontSize: 10, fontFamily: Constants.fonts.light, color: Constants.colors.black, marginHorizontal: 10}}>{this.state.drug.starRating ? this.state.drug.starRating[3]: 0}%</Text>
+                </View>
+                <View style={{flexDirection: 'row',}}>
+                  <Text style={{fontSize: 10, fontFamily: Constants.fonts.light, color: Constants.colors.black, marginHorizontal: 10, width: 6, textAlign: 'right'}}>2</Text>
+                  <Progress.Bar progress={this.state.drug.starRating ? this.state.drug.starRating[2]/100: 0} color={Constants.colors.red} style={{height: 7, alignSelf: 'center'}}/>
+                  <Text style={{fontSize: 10, fontFamily: Constants.fonts.light, color: Constants.colors.black, marginHorizontal: 10}}>{this.state.drug.starRating ? this.state.drug.starRating[2]: 0}%</Text>
+                </View>
+                <View style={{flexDirection: 'row',}}>
+                  <Text style={{fontSize: 10, fontFamily: Constants.fonts.light, color: Constants.colors.black, marginHorizontal: 10, width: 6, textAlign: 'right'}}>1</Text>
+                  <Progress.Bar progress={this.state.drug.starRating ? this.state.drug.starRating[1]/100: 0} color={Constants.colors.red} style={{height: 7, alignSelf: 'center'}}/>
+                  <Text style={{fontSize: 10, fontFamily: Constants.fonts.light, color: Constants.colors.black, marginHorizontal: 10}}>{this.state.drug.starRating ? this.state.drug.starRating[1]: 0}%</Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.separator}/>
+            <Text style={[styles.heading, {fontSize: 16}]}>Top Reviews</Text>
+            <FlatList
+              style={{width: '100%'}}
+              data={this.state.drug.reviews}
+              renderItem={({item, index}) => (<View style={{width: '100%', borderRadius: 20, borderColor: Constants.colors.primaryBlue, borderWidth: StyleSheet.hairlineWidth, padding: 10, alignSelf: 'center'}}>
+              {this.renderReview(item, index)}</View>)}
+              keyExtractor={({item, index}) => index}
+              ItemSeparatorComponent={() => <View style={{height: 10}}/>}
+            />
+            <View style={styles.roundSeparator}/>
+            <Text style={[styles.productInfo, {fontFamily: Constants.fonts.bold}]}>Manufacturer/Marketer Address</Text>
+            <Text style={styles.productInfo}>{this.state.drug.mfgAddress}</Text>
+            <Text style={styles.productInfo}>Country of Origin: {this.state.drug.origin}</Text>
+            <Text style={styles.productInfo}>Expires on or after: <Text style={{fontFamily: Constants.fonts.bold}}>{this.state.drug.expiry}</Text></Text>
+            <Text style={[styles.productInfo, {marginTop: 10, fontFamily: Constants.fonts.bold}]}>
+              A licensed vendor partner from your nearest location will deliver {this.state.drug.name}.
+              Once the pharmacy accepts your order, the details of the pharmacy will be shared with you.
+              Acceptance of your order is based on the validity of your doctor's ℞ and the availability of this medicine.
+            </Text>
+            <View style={{height: 20}}/>
+          </ScrollView>
         </View>
-        <View style={styles.deliveryContainer}>
-          <Text style={styles.deliverytime}> Earliest Delivery by Today 7pm</Text>
-          <Text style={styles.deliverydetail}>Delivery To: 4000008, Mumbai </Text>
-        </View> */}
+      </>
+    );
+  }
+}
 
-
-      </View>
-
-
-    </ScrollView>
-
-  );
-};
-export default App;
-
-// initial code 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'lightgray',
-
+    backgroundColor: 'white',
   },
   text: {
     fontSize: 20,
     color: Constants.colors.primaryGreen,
     fontFamily: Constants.fonts.bold,
   },
-  imagemed: {
-    //flex: 1,
+  image: {
+    width: '100%',
     height: 200,
-    width: '100%',
-    borderWidth: 3,
-    borderBottomWidth: 4,
-    borderColor: 'lightgray',
-    borderRadius: 13,
-    //alignItems: 'center',
-  },
-
-  medContainer: {
-
-    backgroundColor: 'lightgray',
-    //padding: 20
-    topMargin: 50,
-    borderWidth: 3,
-    borderBottomWidth: 4,
-    borderColor: 'lightgray',
-  },
-  medname: {
-    //leftMargin: 40,
-    marginBottom: 0,
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: 25,
-    paddingStart: 15,
-    paddingBottom: 0,
-  },
-  compyname: {
-    //marginTop:0,
-    color: 'gray',
-    fontWeight: 'normal',
-    fontSize: 13,
-    paddingStart: 25,
-    //paddingTop: 0,
-    lineHeight: 13,
-  },
-  detailsContainer: {
-    backgroundColor: 'white',
-    //borderWidth: 2,
-    borderRadius: 20,
-    marginTop: 20,
-    borderWidth: 3,
-    borderBottomWidth: 4,
-    borderColor: 'lightgray',
-  },
-  medprice: {
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: 20,
-    paddingStart: 30,
-    paddingUp: 100,
-    paddingTop: 10,
-  },
-
-  meddetails1: {
-
-    color: 'black',
-    fontWeight: '800',
-    //marginVertical: 20,
-    fontSize: 14,
-    paddingStart: 30,
-  },
-  meddetails1: {
-
-    color: 'black',
-    fontWeight: '800',
-    // marginTop: 10,
-    fontSize: 14,
-    paddingStart: 30,
-  },
-
-
-  deliveryContainer: {
-    backgroundColor: 'white',
-    //borderWidth: 3,
-    borderRadius: 13,
-    marginTop: 10,
-    height: 70,
-    borderWidth: 3,
-    borderBottomWidth: 4,
-    borderColor: 'lightgray',
-  },
-  deliverytime: {
-
-    color: 'black',
-    fontWeight: 'bold',
-    marginVertical: 8,
-    fontSize: 14,
-    paddingStart: 30,
-  },
-  deliverydetail: {
-
-    color: 'black',
-    fontWeight: '400',
-    fontSize: 11,
-    paddingStart: 35,
-  },
-
-
-  safetyContainer: {
-    backgroundColor: 'lightgray',
-    //borderWidth: 2,
-    // borderRadius: 18,
-    marginTop: 10,
-    height: 100,
-    width: '100%',
-
-  },
-  safety: {
-    flex: 1,
-    // width: '100%',
-    // height: 200,
     resizeMode: 'contain',
-    borderWidth: 3,
-    borderBottomWidth: 4,
-    borderColor: 'lightgray',
-    borderRadius: 20,
+    backgroundColor: Constants.colors.centralGray,
 
   },
-
-  pdtContainer: {
-    // backgroundColor: 'white',
-    //   height: 50,
-    // marginVertical: 10,
-    // paddingStart: 30,
-    // alignSelf: 'stretch',
-    // justifyContent: 'center',
-    // alignItems: 'center',
-
-    // border
-    // borderRadius: 15,
-    // borderBottomWidth: 4,
-    // borderColor: 'gray',
-
-  },
-
-  dropDown: {
-    backgroundColor: 'white',
-    height: 50,
-    marginTop: 10,
-    paddingStart: 30,
-    padding: 10,
-    //alignSelf: 'stretch',
-    justifyContent: 'center',
-    // alignItems: 'center',
-    width: '100%',
-    borderWidth: 3,
-
-    //border
-    borderRadius: 15,
-    borderColor: 'lightgray',
-
-  },
-
-  // customerContainer: {
-  //   backgroundColor: 'white',
-  //   height: 500,
-  //   marginVertical: 10,
-  //   paddingStart: 23,
-  //   paddingVertical: 10,
-  //   //alignSelf: 'stretch',
-  //   //justifyContent: 'center',
-
-  //   // border
-  //   borderRadius: 15,
-  //   //borderBottomWidth: 4,
-  //   //borderColor: 'gray',
-
-  // },
-
-  // customerreview: {
-  //   color: 'black',
-  //   fontWeight: 'bold',
-  //   fontSize: 16,
-  //   paddingStart: 10,
-
-  // },
-
-  customerreviewcontainer: {
-    flex: 1,
-    backgroundColor: "lightgray",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  reviewContainer: {
-    backgroundColor: "#FFFFFF",
-    marginTop: 10,
-    borderRadius: 10,
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-    //paddingStart: 35,
-    minWidth: "98%",
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 1.0,
-    shadowRadius: 2,
-    shadowColor: "rgba(193, 211, 251, 0.5)",
-    elevation: 5,
-
-    // height: 100,
-    // marginTop: 10,
-    // paddingStart: 30,
-    // padding: 10,
-    // //alignSelf: 'stretch',
-    // justifyContent: 'center',
-    // // alignItems: 'center',
-    // width: '100%',
-    // borderWidth: 3,
-
-    // //border
-    // borderRadius: 15,
-    // borderColor: 'lightgray',
-  },
-  reviewTitle: {
-    paddingStart: 0,
-    fontWeight: "bold",
+  name: {
     fontSize: 20,
-    color: "#323357",
-    //textAlign: "center",
-  },
-  totalWrap: {
-    marginTop: 20,
-    marginBottom: 5,
-    backgroundColor: "#F5F8FF",
-    borderRadius: 40,
-    alignItems: "center",
-    justifyContent: "space-between",
-    flexDirection: "row",
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-  },
-  amountText: {
-    fontSize: 16,
-    color: "#595B71",
-    textAlign: "center",
-  },
-
-  progressText: {
-    width: 50,
-    fontSize: 14,
-    color: 'darkgreen',//"#2A5BDA"
-  },
-  progressPercentText: { width: 40, fontSize: 14, color: "#323357" },
-  progressMiddle: {
-    height: 15,
-    flex: 1,
+    color: Constants.colors.primaryBlue,
+    fontFamily: Constants.fonts.bold,
+    alignSelf: 'flex-start',
     marginHorizontal: 10,
   },
-  progressWrap: {
-    backgroundColor: "#F5F8FF",
-    borderRadius: 18,
-    position: "absolute",
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-    padding: 2,
+  manufacturer: {
+    fontSize: 12,
+    color: Constants.colors.black,
+    fontFamily: Constants.fonts.light,
+    alignSelf: 'flex-start',
+    marginHorizontal: 10,
   },
-  progressBar: {
-    flex: 1,
-    shadowOffset: { width: 0, height: 0 },
-    shadowColor: "#ffcc48",
-    shadowOpacity: 1.0,
-    shadowRadius: 4,
-    backgroundColor: "#FFCC48",
-    borderRadius: 18,
-    minWidth: 5,
+  price: {
+    fontSize: 24,
+    fontFamily: Constants.fonts.bold,
+    color: Constants.colors.primaryBlue,
+    marginHorizontal: 10
   },
-
-  howWeCalculate: {
-    fontSize: 15,
-    color: 'darkgreen',//"#2A5BDA",
-    textAlign: "center",
+  mrp: {
+    fontSize: 18,
+    fontFamily: Constants.fonts.regular,
+    color: Constants.colors.centralGray,
+    textDecorationLine: 'line-through',
+    alignSelf: 'center'
+  },
+  difference: {
+    fontSize: 16,
+    fontFamily: Constants.fonts.regular,
+    color: Constants.colors.primaryGreen,
+    marginHorizontal: 10,
+    alignSelf: 'center',
+  },
+  cartButton: {
+    width: 80,
+    height: 30,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    position: 'absolute',
+    right: 20,
+  },
+  cartBtnIcons: {
+    width: 12,
+    height: 12,
+    resizeMode: 'contain',
+    marginHorizontal: 15
+  },
+  deliveryHeading: {
+    fontSize: 16,
+    fontFamily: Constants.fonts.bold,
+    color: Constants.colors.primaryBlue,
+    marginHorizontal: 10,
+    alignSelf: 'flex-start',
+  },
+  deliveryText: {
+    fontSize: 14,
+    fontFamily: Constants.fonts.regular,
+    color: Constants.colors.black,
+    marginHorizontal: 10,
+    alignSelf: 'flex-start',
+  },
+  guaranteeIcon: {
+    width: 46,
+    height: 46,
+    resizeMode: 'contain',
+    alignSelf: 'center',
+  },
+  guaranteeText: {
+    fontSize: 12,
+    fontFamily: Constants.fonts.regular,
+    color: Constants.colors.black,
+    alignSelf: 'center',
+    textAlign: 'center',
+    width: 80,
+  },
+  heading: {
+    fontSize: 20,
+    fontFamily: Constants.fonts.bold,
+    color: Constants.colors.primaryBlue,
+    marginHorizontal: 10,
+    textAlign: 'left',
+  },
+  headingArrow: {
+    width: 25,
+    height: 25,
+    resizeMode: 'contain',
+    alignSelf: 'center',
+    marginHorizontal: 10,
+  },
+  productInfo: {
+    fontSize: 12,
+    fontFamily: Constants.fonts.regular,
+    color: 'rgba(0, 0, 0, 0.44)',
+    marginHorizontal: 10,
+    textAlign: 'justify',
+  },
+  roundSeparator: {
+    height: 5,
+    width: 5,
+    backgroundColor: Constants.colors.centralGray,
+    alignSelf: 'center',
+    borderRadius: 5,
+    marginVertical: 15
+  },
+  separator: {
+    height: 1,
+    backgroundColor: Constants.colors.centralGray,
+    width: '70%',
+    alignSelf: "center",
+    marginTop: 20,
+    marginBottom: 10
   }
-  // productContainer: {
-
-  //   backgroundColor: 'white',
-  //   //height: 50,
-  //   marginVertical: 10,
-  //   // paddingStart: 30,
-  //   // alignSelf: 'stretch',
-  //   // justifyContent: 'center',
-  //   //alignItems: 'center',
-
-  //   // border
-  //   // borderRadius: 15,
-  //   // borderBottomWidth: 4,
-  //   // borderColor: 'gray',
-
-  // },
-  // producttext: {
-
-  //   color: 'black',
-  //   fontWeight: 'bold',
-  //   fontSize: 16,
-  //   paddingStart: 10,
-  //   //textDecorationLine: 'underline',
-  //   // borderColor: 'black',
-  //   // borderBottomWidth: 1,
-  // },
-
-  // disabledContainer: {
-  //   backgroundColor: 'green',
-  //   borderColor: 'lightgreen',
-  // },
 });

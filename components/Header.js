@@ -10,7 +10,7 @@ export default class Cart extends React.Component {
           <TouchableOpacity onPress={this.props.onBack}>
             <Image source={Constants.img.backArrow} style={styles.icons}/>
           </TouchableOpacity>
-          <Text style={styles.title}>{this.props.title}</Text>
+          <Text style={styles.title} numberOfLines={1}>{this.props.title}</Text>
           {this.props.showSearch == false ? <View style={{width: 16, height: 16}}/> : 
           <TouchableOpacity onPress={this.props.onSearch}>
             <Image source={Constants.img.search} style={styles.icons}/>
@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     color: Constants.colors.primaryGreen,
     fontFamily: Constants.fonts.bold,
     textAlign: 'center',
+    width: '70%',
   },
   icons: {
     width: 16,

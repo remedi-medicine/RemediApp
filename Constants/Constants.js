@@ -47,6 +47,14 @@ const Constants = {
         minus: require('../assets/images/minus.png'),
         delete: require('../assets/images/delete.png'),
 
+        genuine: require('../assets/images/genuine.png'),
+        safe: require('../assets/images/safe.png'),
+        contactless: require('../assets/images/contactless.png'),
+        sanitised: require('../assets/images/sanitised.png'),
+
+        downArrow: require('../assets/images/down-arrow.png'),
+        upArrow: require('../assets/images/up-arrow.png'),
+
         banner: [require('../assets/images/banner-1.jpg'), require('../assets/images/banner-2.jpg'), require('../assets/images/banner-3.png')],
     },
     //This is the list of fonts used in the app

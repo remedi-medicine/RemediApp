@@ -57,7 +57,7 @@ export default class Cart extends React.Component {
     console.log("Price: ", drug?.price, "Quantity: ", userCart[drugID], "Total: ", drug?.price * userCart[drugID])
     return (
       <> 
-        <View style={styles.drugView}>
+        <TouchableOpacity style={styles.drugView} onPress={() => this.props.navigation.push("Product", {drugID: drugID})}>
           <View style={styles.drugImgView}>
             <Image source={{uri: drug?.image}} style={styles.drugImg}/>
           </View>
@@ -83,7 +83,7 @@ export default class Cart extends React.Component {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
       </>
     )
   }
@@ -132,25 +132,8 @@ export default class Cart extends React.Component {
 
   goToAddress = () => {
     this.saveCart();
-    fetch(`https://api.razorpay.com/v1/orders`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        amount: this.getTotal() * 100,
-        currency: 'INR',
-        notes: userCart,
-      }),
-    })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      this.props.navigation.push("ViewAddress", {orderID: data.id, total: this.getTotal()});
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+    Object.keys(userCart).length == 0 ? ToastAndroid.show('Cart is Empty', ToastAndroid.SHORT) :
+    this.props.navigation.push("ViewAddress", {total: this.getTotal()});
   }
 
   render() {
@@ -208,6 +191,7 @@ export default class Cart extends React.Component {
             <Pressable style={styles.continueButton} onPress={() => this.goToAddress()}>
               <Text style={styles.continueText}>Select Address</Text>
             </Pressable>
+            <View style={{height: 10}}/>
           </ScrollView>
         </View>
         <Modal

@@ -52,7 +52,7 @@ export default class Cart extends React.Component {
     let drug = DrugList[drugID];
     return (
       <>
-        <View style={styles.drugView}>
+        <TouchableOpacity style={styles.drugView} onPress={() => this.props.navigation.push("Product", {drugID: drugID})}>
           <View style={styles.drugImgView}>
             <Image source={{uri: drug.image}} style={styles.drugImg}/>
           </View>
@@ -84,7 +84,7 @@ export default class Cart extends React.Component {
               </TouchableOpacity>
             }
           </View>
-        </View>
+        </TouchableOpacity>
       </>
     )
   }
