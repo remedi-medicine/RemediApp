@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "969159804404",
+    "project_id": "remedi---instant-medicine",
+    "storage_bucket": "remedi---instant-medicine.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:969159804404:android:2406d67d8812d5ceb525a1",
+        "android_client_info": {
+          "package_name": "com.remediapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "969159804404-si7hm6q034td4cno3aepl80it9d3q00u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4RpjrthmxfJii6DdzrxGfuvLkmDjQfR0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "969159804404-si7hm6q034td4cno3aepl80it9d3q00u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

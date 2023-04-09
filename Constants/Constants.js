@@ -3,12 +3,19 @@ import { Platform } from 'react-native';
 //This file contains all the global constants used in the app
 const Constants = {
     colors : {
-        primaryGreen : "#019874", //This is the primary green colour used in the app
+        primaryGreen : "#019874",//This is the primary green colour used in the app
         primaryBlue : "#090F47",
         translucentBlue: "rgba(9, 15, 71, 45)",
+        centralGray: "rgba(196, 196, 196, 0.54)",
+        white : "#FFFFFF",
+        black : "#000000",
+        red: "#FF0000",
     },
     //This is the list of images used in the app
     img: {
+        remediLogo : require('../assets/images/remedi-logo.png'),
+        remediRound : require('../assets/images/remedi-round.png'),
+
         profile : require('../assets/images/StockProfile.png'),
         search : require('../assets/images/search.png'),
         listGreen : require('../assets/images/list-green.png'),
@@ -16,6 +23,7 @@ const Constants = {
         rightArrow : require('../assets/images/right-arrow.png'),
         rightArrowTrans : require('../assets/images/right-arrow-trans.png'),
         edit: require('../assets/images/edit.png'),
+        backArrow: require('../assets/images/back-arrow.png'),
 
         home0 : require('../assets/images/home-deselected.png'),
         home1 : require('../assets/images/home-selected.png'),
@@ -26,6 +34,26 @@ const Constants = {
         profile0 : require('../assets/images/profile-deselected.png'),
         profile1 : require('../assets/images/profile-selected.png'),
         cart : require('../assets/images/cart.png'),
+
+        welcomeBack : require('../assets/images/welcome-back.png'),
+
+        billing : require('../assets/images/billing.png'),
+        faq : require('../assets/images/faq.png'),
+        logout : require('../assets/images/logout.png'),
+        savedForLater : require('../assets/images/saved-for-later.png'),
+        myOrders : require('../assets/images/my-orders.png'),
+
+        plus: require('../assets/images/plus.png'),
+        minus: require('../assets/images/minus.png'),
+        delete: require('../assets/images/delete.png'),
+
+        genuine: require('../assets/images/genuine.png'),
+        safe: require('../assets/images/safe.png'),
+        contactless: require('../assets/images/contactless.png'),
+        sanitised: require('../assets/images/sanitised.png'),
+
+        downArrow: require('../assets/images/down-arrow.png'),
+        upArrow: require('../assets/images/up-arrow.png'),
 
         banner: [require('../assets/images/banner-1.jpg'), require('../assets/images/banner-2.jpg'), require('../assets/images/banner-3.png')],
     },
