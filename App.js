@@ -14,7 +14,6 @@ import AddAddress from './screens/AddAddress';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 
-
 const Stack = createStackNavigator();
 
 export default class App extends React.Component {
