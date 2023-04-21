@@ -38,7 +38,7 @@ export default class AppBottomTab extends React.Component {
               ? Constants.img.profile1
               : Constants.img.profile0;
             }
-            return <Image source={iconPath} style={{width: 17.27, height: 16}}/>;//Returns the icon
+            return <Image source={iconPath} style={{width: 18, height: 18, resizeMode: 'contain'}}/>;//Returns the icon
           },
           headerShown: false,//Hides the header
           tabBarShowLabel: false,//Hides the label

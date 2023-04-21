@@ -9,7 +9,7 @@ export default class Notification extends React.Component {
       <>
         <View style={styles.container}>
           <Header title="Notification" showSearch={false} onBack={() => this.props.navigation.goBack()}/>
-          <Text style={styles.text}>Notification</Text>
+          <Text style={{alignSelf: 'center', color: Constants.colors.centralGray, fontFamily: Constants.fonts.semibold, fontSize: 28, marginTop: 150}}>You Have No Notification</Text>
         </View>
       </>
     );
