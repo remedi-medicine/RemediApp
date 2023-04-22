@@ -150,7 +150,7 @@ export default class Notification extends React.Component {
             </View>
             <View style={{marginHorizontal: 10, flexDirection: 'row', width: '100%'}}>
               <Text style={styles.price}>₹{this.state.drug.price}</Text>
-              <Text style={styles.mrp}>₹{this.state.drug.mrp}</Text>
+              {this.state.drug.mrp != this.state.drug.price ? <Text style={styles.mrp}>₹{this.state.drug.mrp}</Text> : null}
               <Text style={styles.difference}>{this.getDifference()}</Text>
 
               { userCart[this.state.drugID] ? 
