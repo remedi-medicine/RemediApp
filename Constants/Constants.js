@@ -24,6 +24,7 @@ const Constants = {
         rightArrowTrans : require('../assets/images/right-arrow-trans.png'),
         edit: require('../assets/images/edit.png'),
         backArrow: require('../assets/images/back-arrow.png'),
+        close: require('../assets/images/close.png'),
 
         home0 : require('../assets/images/home-deselected.png'),
         home1 : require('../assets/images/home-selected.png'),

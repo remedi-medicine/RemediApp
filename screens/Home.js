@@ -31,6 +31,7 @@ export default class Home extends React.Component {
       showLoading1: true,
       showLoading2: true,
       refreshing: false,
+      searchText: '',
     },
     this.category = [
       require('../assets/images/dental.png'),
@@ -190,7 +191,7 @@ export default class Home extends React.Component {
               <Text style={styles.welcomeSubText}>{this.state.suburb}, {this.state.city} - {this.state.postcode}</Text>{/*This renders the location of the user*/}
               <TouchableOpacity style={styles.search}>{/*This marks a clickable outline for the search bar*/}
                 <Image source={Constants.img.search} style={styles.searchIcon}/>{/*This renders the search icon*/}
-                <TextInput style={styles.searchText} placeholder="Search Medicines & Healthcare Products" placeholderTextColor={Constants.colors.translucentBlue}></TextInput>{/*This renders the search text*/}
+                <TextInput style={styles.searchText} placeholder="Search Medicines & Healthcare Products" placeholderTextColor={Constants.colors.translucentBlue} value={this.state.searchText} onChangeText={(newSearchText) => this.setState({searchText: newSearchText})} onSubmitEditing={() => this.props.navigation.navigate("Search", {searchText: this.state.searchText})}></TextInput>{/*This renders the search text*/}
               </TouchableOpacity>
             </View>
             <Text style={[styles.heading, {marginTop: 24}]}>

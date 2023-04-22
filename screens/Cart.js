@@ -140,7 +140,7 @@ export default class Cart extends React.Component {
     return(
       <>
         <View style={styles.container}>
-          <Header title={"Cart"} onBack={() => this.props.navigation.goBack()} showSearch={false}/>
+          <Header title={"Cart"} onBack={() => this.props.navigation.goBack()} showSearch={true}/>
           <ScrollView style={{flex: 1}}>
             {Object.keys(userCart).length>0 ? <FlatList
               data={Object.keys(userCart)}
