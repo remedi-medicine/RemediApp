@@ -10,7 +10,7 @@
         "background" : "#15BD92"
     },
     {
-        "name" : "Homeo",
+        "name" : "Homeopathy",
         "icon" : "'./assets/images/homeo.png'",
         "background" : "#FF793A"
     },
@@ -23,5 +23,10 @@
         "name" : "Skin & Hair",
         "icon" : "'./assets/images/skinhair.png'",
         "background" : "#090F47"
+    },
+    {
+      "name": "Bone",
+      "background": "#FC2947",
+      "icon": "'./assets/images/bone.png'"
     }
 ]

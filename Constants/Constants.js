@@ -47,6 +47,7 @@ const Constants = {
         plus: require('../assets/images/plus.png'),
         minus: require('../assets/images/minus.png'),
         delete: require('../assets/images/delete.png'),
+        star: require('../assets/images/star.png'),
 
         genuine: require('../assets/images/genuine.png'),
         safe: require('../assets/images/safe.png'),

@@ -32,6 +32,7 @@ export default class Home extends React.Component {
       showLoading2: true,
       refreshing: false,
       searchText: '',
+      randomIndex: 0,
     },
     this.category = [
       require('../assets/images/dental.png'),
@@ -39,12 +40,14 @@ export default class Home extends React.Component {
       require('../assets/images/homeo.png'),
       require('../assets/images/eyecare.png'),
       require('../assets/images/skinhair.png'),
+      require('../assets/images/bone.png'),
     ]
   }
 
   componentDidMount = () => {
     remediData.child('DrugList').on('value', (snapshot) => {
       DrugList = snapshot.val();
+      this.getRandomIndex();
       this.setState({showLoading1: false});
     });
     
@@ -63,18 +66,6 @@ export default class Home extends React.Component {
         )
       });
     }
-
-  //This function gets the data from the database
-  _getData = () => {
-    remediData.child('DrugList').on('value', (snapshot) => {
-      DrugList = snapshot.val();
-      this.setState({showLoading1: false});
-    });
-    
-    remediData.child('Deals').once('value').then(snapshot => {
-      this.setState({deal: snapshot.val(), showLoading2: false});
-    });
-  }
 
   _getCurrentLocation = () => {
     let latitude=0, longitude=0;
@@ -110,11 +101,16 @@ export default class Home extends React.Component {
     );
   }
 
+  getRandomIndex = () => {
+    let randomIndex = Math.floor(Math.random() * (Object.keys(DrugList).length-5));
+    this.setState({randomIndex: randomIndex});
+  }
+
   //This function renders the categories
   //Function is called by FlatList
   renderCategories = (item, index) => {
     return (
-      <TouchableOpacity style={styles.category}>{/*This marks a clickable outline for the category names*/}
+      <TouchableOpacity style={styles.category} onPress={() => this.props.navigation.navigate("Category", {categoryName: item.name})}>{/*This marks a clickable outline for the category names*/}
         <View style={[styles.categoryCircle,{backgroundColor: item.background}]}>{/*This renders the category circle with a specified background colour*/}
           <Image source={this.category[index]} style={styles.categoryIcon}/>{/*This renders the category icon*/}
         </View>
@@ -145,6 +141,7 @@ export default class Home extends React.Component {
           <Text style={styles.dealPrice}>₹ {drug?.price}</Text>{/*This renders the deal price*/}
         </View>
         <View style={styles.viewDealRating}>
+          <Image source={Constants.img.star} style={{width: 13, height: 13, resizeMode: 'contain', alignSelf: 'center', marginHorizontal: 3}}/>
           <Text style={styles.dealRating}>{drug?.rating}</Text>{/*This renders the deal rating*/}
         </View>
       </TouchableOpacity>
@@ -165,6 +162,7 @@ export default class Home extends React.Component {
           <Text style={styles.dealPrice}>₹ {item.price}</Text>{/*This renders the drug price*/}
         </View>
         <View style={styles.viewDealRating}>
+          <Image source={Constants.img.star} style={{width: 13, height: 13, resizeMode: 'contain', alignSelf: 'center', marginHorizontal: 3}}/>
           <Text style={styles.dealRating}>{item.rating}</Text>{/*This renders the drug rating*/}
         </View>
       </TouchableOpacity>
@@ -202,7 +200,8 @@ export default class Home extends React.Component {
               horizontal//This makes the list horizontal instead of vertical
               data={Category}//This is the data that is to be rendered
               style={{marginTop: 8, marginHorizontal: 15, minHeight: 100,}}//This is the style of the flatlist
-              renderItem={({item, index}) => (this.renderCategories(item, index))}/>{/*This calls the renderCategories function to render the categories*/}
+              renderItem={({item, index}) => (this.renderCategories(item, index))}//This calls the renderCategories function to render the categories
+              showsHorizontalScrollIndicator/>
             {/*This creates a flatlist of banner images*/}
             <FlatList
               horizontal
@@ -232,7 +231,7 @@ export default class Home extends React.Component {
             {/*This creates a flatlist of all available drugs*/}
             <FlatList
               horizontal
-              data={Object.keys(DrugList).slice(5)}
+              data={Object.keys(DrugList).slice(this.state.randomIndex, this.state.randomIndex+5)}
               style={{marginTop: 8, marginHorizontal: 15, minHeight: 275}}
               renderItem={({item, index}) => (this.renderAllDrugs(item, index))}/>
             <View style={{height: 100}}/>
@@ -361,7 +360,7 @@ const styles = StyleSheet.create({
   },
   category: {
     height: 98,
-    width: 64,
+    width: 80,
     backgroundColor: 'white',
     borderRadius: 32,
     elevation: 3,
@@ -369,8 +368,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   categoryCircle: {
-    height: 48,
-    width: 48,
+    height: 60,
+    width: 60,
     borderRadius: 100,
     backgroundColor: Constants.colors.primaryGreen,
     alignSelf: 'center',
@@ -380,14 +379,15 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   categoryIcon: {
-    height: 16,
-    width: 16,
+    height: 26,
+    width: 26,
+    resizeMode: 'contain',
   },
   categoryText: {
     color: Constants.colors.primaryBlue,
     fontSize: 11,
     fontFamily: Constants.fonts.light,
-    marginTop: 5,
+    marginTop: -5,
     textAlign: 'center',
   },
   bannerImage: {
@@ -443,12 +443,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 13,
     justifyContent: 'center',
+    flexDirection: 'row',
   },
   dealRating: {
     color: 'white',
     fontSize: 13,
     fontFamily: Constants.fonts.bold,
-    alignSelf: 'flex-end',
+    alignSelf: 'center',
     marginEnd: 10,
   },
   modalContainer: {

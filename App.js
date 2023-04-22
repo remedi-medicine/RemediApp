@@ -11,6 +11,7 @@ import ViewDrugs from './screens/ViewDrugs';
 import ViewAddress from './screens/ViewAddress';
 import AddAddress from './screens/AddAddress';
 import Search from './screens/Search';
+import Category from './screens/Category';
 
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -31,6 +32,7 @@ export default class App extends React.Component {
           <Stack.Screen name="ViewAddress" component={ViewAddress}/>
           <Stack.Screen name="AddAddress" component={AddAddress}/>
           <Stack.Screen name="Search" component={Search}/>
+          <Stack.Screen name="Category" component={Category}/>
         </Stack.Navigator>
       </NavigationContainer>
     );
