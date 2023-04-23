@@ -32,7 +32,7 @@ export default class Notification extends React.Component {
       drug: {},
       city: 'xxxxxx',
       postcode: '000000',
-      showProductInfo: false,
+      showProductInfo: true,
     };
   }
 
@@ -150,7 +150,7 @@ export default class Notification extends React.Component {
             </View>
             <View style={{marginHorizontal: 10, flexDirection: 'row', width: '100%'}}>
               <Text style={styles.price}>₹{this.state.drug.price}</Text>
-              <Text style={styles.mrp}>₹{this.state.drug.mrp}</Text>
+              {this.state.drug.mrp != this.state.drug.price ? <Text style={styles.mrp}>₹{this.state.drug.mrp}</Text> : null}
               <Text style={styles.difference}>{this.getDifference()}</Text>
 
               { userCart[this.state.drugID] ? 
@@ -202,11 +202,18 @@ export default class Notification extends React.Component {
               <Text style={styles.heading}>PRODUCT INFORMATION</Text>
               <Image source={this.state.showProductInfo ? Constants.img.upArrow: Constants.img.downArrow} style={styles.headingArrow}/>
             </TouchableOpacity>
-            {this.state.showProductInfo && <FlatList
+            {this.state.showProductInfo && <><FlatList
               data={this.state.drug.product_info}
               renderItem={({item, index}) => <Text style={[styles.productInfo, {fontFamily: this.state.drug.product_info[index-1]==" "? Constants.fonts.bold:Constants.fonts.regular}]}>{item}</Text>}
-              keyExtractor={item => item}
-            />}
+              keyExtractor={item => item}/>
+              { this.state.drug.category ? <>
+              <Text style={[styles.heading, {fontSize: 16, marginTop: 10}]}>Category: </Text>
+              {this.state.drug.category?.map((categoryName, index) => {
+                return (
+                    <Text style={[styles.heading, {fontSize: 16, color: Constants.colors.primaryGreen}]} onPress={() => this.props.navigation.push("Category", {categoryName: categoryName})}>
+                      {categoryName}</Text>)})}</>
+              : null}
+              </>}
             <View style={styles.roundSeparator}/>
             <Text style={styles.heading}>CUSTOMER REVIEWS</Text>
             <View style={{flexDirection: 'row', width: '100%'}}>

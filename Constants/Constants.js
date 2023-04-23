@@ -24,6 +24,7 @@ const Constants = {
         rightArrowTrans : require('../assets/images/right-arrow-trans.png'),
         edit: require('../assets/images/edit.png'),
         backArrow: require('../assets/images/back-arrow.png'),
+        close: require('../assets/images/close.png'),
 
         home0 : require('../assets/images/home-deselected.png'),
         home1 : require('../assets/images/home-selected.png'),
@@ -46,6 +47,7 @@ const Constants = {
         plus: require('../assets/images/plus.png'),
         minus: require('../assets/images/minus.png'),
         delete: require('../assets/images/delete.png'),
+        star: require('../assets/images/star.png'),
 
         genuine: require('../assets/images/genuine.png'),
         safe: require('../assets/images/safe.png'),
@@ -56,6 +58,14 @@ const Constants = {
         upArrow: require('../assets/images/up-arrow.png'),
 
         banner: [require('../assets/images/banner-1.jpg'), require('../assets/images/banner-2.jpg'), require('../assets/images/banner-3.png')],
+        category: {
+          "Dental": require('../assets/images/dental.png'),
+          "Wellness": require('../assets/images/wellness.png'),
+          "Homeopathy": require('../assets/images/homeo.png'),
+          "Eye Care": require('../assets/images/eyecare.png'),
+          "Skin & Hair": require('../assets/images/skinhair.png'),
+          "Bone": require('../assets/images/bone.png'),
+        }
     },
     //This is the list of fonts used in the app
     fonts : {

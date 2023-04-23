@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text, FlatList, Modal, Image, TouchableOpacity, ToastAndroid } from "react-native";
+import { StyleSheet, View, Text, Modal, ToastAndroid, FlatList, TouchableOpacity, Image } from "react-native";
 import Constants from "../Constants/Constants";
 import Header from "../components/Header";
 
@@ -19,14 +19,17 @@ const userData = firebase
   .ref('UserData');
 
 let DrugList = {}, userCart = {};
+let categoryList = [];
 
-export default class Cart extends React.Component {
+export default class Notification extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       user : auth().currentUser,
       showLoading1: true,
       showLoading2: true,
+      showSearching: false,
+      categoryName: this.props.route.params.categoryName,
     };
   }
 
@@ -40,6 +43,10 @@ export default class Cart extends React.Component {
     remediData.child('DrugList').on('value', (snapshot) => {
       DrugList = snapshot.val();
       this.setState({showLoading2: false});})
+    remediData.child("CategoryList").child(this.state.categoryName).on('value', (snapshot) => {
+      categoryList = snapshot.val() ? snapshot.val() : [];
+      console.log("Category List: ", categoryList);
+      this.setState({showSearching: false});})
   }
 
   componentWillUnmount = () => {
@@ -52,6 +59,7 @@ export default class Cart extends React.Component {
     let drug = DrugList[drugID];
     return (
       <>
+      {drug ? (
         <TouchableOpacity style={styles.drugView} onPress={() => this.props.navigation.push("Product", {drugID: drugID})}>
           <View style={styles.drugImgView}>
             <Image source={{uri: drug.image}} style={styles.drugImg}/>
@@ -84,7 +92,7 @@ export default class Cart extends React.Component {
               </TouchableOpacity>
             }
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity>): null}
       </>
     )
   }
@@ -108,17 +116,19 @@ export default class Cart extends React.Component {
     return(
       <>
         <View style={styles.container}>
-          <Header title="All Products" onBack={() => this.props.navigation.goBack()} navigation={this.props.navigation}/>
-          <FlatList
-            data={Object.keys(DrugList)}
-            renderItem={({item}) => this.renderDrugList(item)}
-            keyExtractor={item => item}
-            showsVerticalScrollIndicator
-            ItemSeparatorComponent={() => <View style={styles.separator}/>}
-          />
+          <Header title={this.state.categoryName} showSearch={true} onBack={() => this.props.navigation.goBack()} isSearch={false} navigation={this.props.navigation}/>
+          {categoryList.length > 0 ?
+            <FlatList
+              data={categoryList}
+              renderItem={({item}) => this.renderDrugList(item)}
+              keyExtractor={item => item}
+              showsVerticalScrollIndicator
+              ItemSeparatorComponent={() => <View style={styles.separator}/>}
+            /> :
+          <Text style={{alignSelf: 'center', color: Constants.colors.centralGray, fontFamily: Constants.fonts.semibold, fontSize: 20, marginTop: 150}}>Nothing Came Up</Text>}
         </View>
         <Modal
-          visible={this.state.showLoading1 || this.state.showLoading2}
+          visible={this.state.showLoading1 || this.state.showLoading2 || this.state.showSearching}
           transparent={true}
           animationType="fade">
           <View style={styles.modalContainer}>
@@ -141,83 +151,83 @@ export default class Cart extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  text: {
-    fontSize: 20,
-    color: Constants.colors.primaryGreen,
-    fontFamily: Constants.fonts.bold,
-  },
-  drugView: {
-    width: '90%',
-    alignSelf: 'center',
-    height: 150,
-    flex: 1,
-    flexDirection: 'row',
-  },
-  drugImgView: {
-    width: 80,
-    height: 80,
-    alignSelf: 'center',
-  },
-  drugImg: {
-    width: 80,
-    height: 80,
-    resizeMode: 'contain',
-  },
-  drugTextView: {
-    width: '70%',
-    marginVertical: 20,
-    marginHorizontal: 20,
-  },
-  drugNameText: {
-    color: Constants.colors.black,
-    fontFamily: Constants.fonts.bold,
-    fontSize: 16
-  },
-  drugMfgText: {
-    color: Constants.colors.black,
-    fontFamily: Constants.fonts.light,
-    fontSize: 12
-  },
-  drugPriceText: {
-    color: Constants.colors.primaryGreen,
-    fontFamily: Constants.fonts.bold,
-    fontSize: 16
-  },
-  separator: {
-    height: 1,
-    backgroundColor: "rgba(9, 28, 63, 0.5)",
-    width: '90%',
-    alignSelf: "center",
-  },
-  cartButton: {
-    width: 80,
-    height: 30,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  cartBtnIcons: {
-    width: 12,
-    height: 12,
-    resizeMode: 'contain',
-    marginHorizontal: 15
-  },
-  modalContainer: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modal: {
-    backgroundColor: Constants.colors.white,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-    flexDirection: 'row'
-  },
+    container: {
+        flex: 1,
+        backgroundColor: 'white',
+    },
+    text: {
+        fontSize: 20,
+        color: Constants.colors.primaryGreen,
+        fontFamily: Constants.fonts.bold,
+    },
+    drugView: {
+      width: '90%',
+      alignSelf: 'center',
+      height: 150,
+      flex: 1,
+      flexDirection: 'row',
+    },
+    drugImgView: {
+      width: 80,
+      height: 80,
+      alignSelf: 'center',
+    },
+    drugImg: {
+      width: 80,
+      height: 80,
+      resizeMode: 'contain',
+    },
+    drugTextView: {
+      width: '70%',
+      marginVertical: 20,
+      marginHorizontal: 20,
+    },
+    drugNameText: {
+      color: Constants.colors.black,
+      fontFamily: Constants.fonts.bold,
+      fontSize: 16
+    },
+    drugMfgText: {
+      color: Constants.colors.black,
+      fontFamily: Constants.fonts.light,
+      fontSize: 12
+    },
+    drugPriceText: {
+      color: Constants.colors.primaryGreen,
+      fontFamily: Constants.fonts.bold,
+      fontSize: 16
+    },
+    separator: {
+      height: 1,
+      backgroundColor: "rgba(9, 28, 63, 0.5)",
+      width: '90%',
+      alignSelf: "center",
+    },
+    cartButton: {
+      width: 80,
+      height: 30,
+      borderRadius: 10,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    cartBtnIcons: {
+      width: 12,
+      height: 12,
+      resizeMode: 'contain',
+      marginHorizontal: 15
+    },
+    modalContainer: {
+      flex: 1,
+      backgroundColor: 'rgba(0,0,0,0.5)',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    modal: {
+      backgroundColor: Constants.colors.white,
+      borderRadius: 20,
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 20,
+      flexDirection: 'row'
+    },
 });

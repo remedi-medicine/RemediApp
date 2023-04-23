@@ -42,10 +42,13 @@ export default class List extends React.Component {
     let uid = user.uid;
     userData.child(uid).child('MyList').orderByKey().on('value', (snapshot) => {
       CustList = snapshot.val();
-      length = Object.keys(CustList).length;
       show = [];
-      for (let i = 0; i < length; i++) {
-        show.push(false);
+      if (CustList == null) {}
+      else {
+        length = Object.keys(CustList).length;
+        for (let i = 0; i < length; i++) {
+          show.push(false);
+        }
       }
       this.setState({user:user, showListContent: show, showLoading1: false});})
     remediData.child('DrugList').on('value', (snapshot) => {
@@ -143,13 +146,13 @@ export default class List extends React.Component {
                 <ScrollView style={styles.container}>{/*This is the main container of the screen - made Scrollable for user experience*/}
                     {this.renderProfileCard()}
                     {/*This is the FlatList which is used to display the list of names of the lists created by the user */}
-                    <FlatList
+                    {CustList ? <FlatList
                         data={Object.keys(CustList)}//This is the data that is to be displayed in the FlatList
                         renderItem={({item, index}) => (this.renderListName(item, index))}//This is the function that is called to render each item in the FlatList
                         keyExtractor={(item, index) => index.toString()}//This is the key that is used to uniquely identify each item in the FlatList
                         ItemSeparatorComponent={() => <View style={styles.separator}/>}//This is the component that is used to separate each item in the FlatList
                         contentContainerStyle={{alignItems: 'center'}}
-                    />
+                    /> : <Text style={{alignSelf: 'center', color: Constants.colors.centralGray, fontFamily: Constants.fonts.semibold, fontSize: 28, marginTop: 150}}>No List Added Yet</Text>}
                 </ScrollView>
               </View>
               <Modal

@@ -140,15 +140,15 @@ export default class Cart extends React.Component {
     return(
       <>
         <View style={styles.container}>
-          <Header title={"Cart"} onBack={() => this.props.navigation.goBack()} showSearch={false}/>
+          <Header title={"Cart"} onBack={() => this.props.navigation.goBack()} showSearch={true}/>
           <ScrollView style={{flex: 1}}>
-            <FlatList
+            {Object.keys(userCart).length>0 ? <FlatList
               data={Object.keys(userCart)}
               renderItem={({item}) => this.renderCartList(item)}
               keyExtractor={item => item}
               showsVerticalScrollIndicator
               ItemSeparatorComponent={() => <View style={styles.separator}/>}
-            />
+            />: <Text style={{alignSelf: 'center', color: Constants.colors.centralGray, fontFamily: Constants.fonts.semibold, fontSize: 20, marginVertical: 50}}>Cart is Empty</Text>}
             <View style={styles.addItemsView}>
               <Text style={styles.heading}>Missing Items?</Text>
               <Text style={[styles.heading,{color: Constants.colors.primaryGreen}]} onPress={() => this.props.navigation.push("ViewDrugs")}>View All Products</Text>
