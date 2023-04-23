@@ -50,6 +50,27 @@ export default class Cart extends React.Component {
             });
     }
 
+    forgotPassword = () => {
+      if (this.state.email == '') {
+        alert("Please Enter Email & Select Forgot Password");
+        return;
+      }
+      auth()
+        .sendPasswordResetEmail(this.state.email)
+        .then(() => {
+          alert('Password reset email sent!', 'Please follow instructions in the email to reset your password.\nLogin with your new password');
+        })
+        .catch(error => {
+          if (error.code === 'auth/invalid-email') {
+            alert('That email address is invalid!');
+          }
+          else if (error.code === 'auth/user-not-found') {
+            alert(error.message);
+          }
+          console.error(error);
+        });
+    }
+
     render() {
         return(
             <>
@@ -89,7 +110,7 @@ export default class Cart extends React.Component {
                                   style={{width: 25, height: 25}}/>
                               </TouchableOpacity>
                             </View>
-                            <Text style={styles.forgotPassword}>Forgot Password?</Text>
+                            <Text style={styles.forgotPassword} onPress={() => this.forgotPassword()}>Forgot Password?</Text>
                             <Pressable style={styles.loginButton} onPress={() => {console.log("Login Button Clicked");this.loginUser()}}>
                                 <Text style={styles.loginText}>Sign In</Text>
                             </Pressable>
