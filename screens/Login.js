@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text, Image, Dimensions, TextInput, ScrollView, Pressable, Modal } from "react-native";
+import { StyleSheet, View, Text, Image, Dimensions, TextInput, ScrollView, Pressable, Modal, TouchableOpacity } from "react-native";
 
 import auth from '@react-native-firebase/auth';
 
@@ -18,6 +18,7 @@ export default class Cart extends React.Component {
             password: '',
             showBlank: false,
             showProgress: false,
+            hidePassword: true,
         }
     }
     
@@ -69,17 +70,25 @@ export default class Cart extends React.Component {
                                 onFocus={() => {this.setState({showBlank: true}); this.scrollView.scrollToEnd({animated: true})}}
                                 onBlur={() => this.setState({showBlank: false})}
                             />
-                            <TextInput
-                                style={[styles.input, {marginTop: 26}]}
-                                value={this.state.password}
-                                placeholder="Enter Your Password"
-                                placeholderTextColor={Constants.colors.centralGray}
-                                autoComplete='password'
-                                onChangeText={(newPassword) => this.setState({password: newPassword})}
-                                onFocus={() => {this.setState({showBlank: true}); this.scrollView.scrollToEnd({animated: true})}}
-                                onBlur={() => this.setState({showBlank: false})}
-                                secureTextEntry={true}
-                            />
+                            <View>
+                              <TextInput
+                                  style={[styles.input, {marginTop: 26, paddingRight: 40}]}
+                                  value={this.state.password}
+                                  placeholder="Enter Your Password"
+                                  placeholderTextColor={Constants.colors.centralGray}
+                                  autoComplete='password'
+                                  onChangeText={(newPassword) => this.setState({password: newPassword})}
+                                  onFocus={() => {this.setState({showBlank: true}); this.scrollView.scrollToEnd({animated: true})}}
+                                  onBlur={() => this.setState({showBlank: false})}
+                                  secureTextEntry={this.state.hidePassword}
+                              />
+                              <TouchableOpacity style={styles.showIcon}
+                                onPress={() => this.setState({hidePassword : !this.state.hidePassword})}>
+                                <Image
+                                  source={this.state.hidePassword ? Constants.img.hidePassword : Constants.img.showPassword}
+                                  style={{width: 25, height: 25}}/>
+                              </TouchableOpacity>
+                            </View>
                             <Text style={styles.forgotPassword}>Forgot Password?</Text>
                             <Pressable style={styles.loginButton} onPress={() => {console.log("Login Button Clicked");this.loginUser()}}>
                                 <Text style={styles.loginText}>Sign In</Text>
@@ -189,6 +198,12 @@ const styles = StyleSheet.create({
         fontFamily: Constants.fonts.regular,
         fontSize: 16,
         color: Constants.colors.black,
+    },
+    showIcon: 
+    {
+      position: 'absolute',
+      top: '50%',
+      right: 40,
     },
     forgotPassword: {
         fontSize: 16,

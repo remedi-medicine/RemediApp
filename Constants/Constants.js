@@ -57,6 +57,9 @@ const Constants = {
         downArrow: require('../assets/images/down-arrow.png'),
         upArrow: require('../assets/images/up-arrow.png'),
 
+        showPassword: require('../assets/images/show-password.png'),
+        hidePassword: require('../assets/images/hide-password.png'),
+
         banner: [require('../assets/images/banner-1.jpg'), require('../assets/images/banner-2.jpg'), require('../assets/images/banner-3.png')],
         category: {
           "Dental": require('../assets/images/dental.png'),
