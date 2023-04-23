@@ -33,15 +33,7 @@ export default class Home extends React.Component {
       refreshing: false,
       searchText: '',
       randomIndex: 0,
-    },
-    this.category = [
-      require('../assets/images/dental.png'),
-      require('../assets/images/wellness.png'),
-      require('../assets/images/homeo.png'),
-      require('../assets/images/eyecare.png'),
-      require('../assets/images/skinhair.png'),
-      require('../assets/images/bone.png'),
-    ]
+    };
   }
 
   componentDidMount = () => {
@@ -112,7 +104,7 @@ export default class Home extends React.Component {
     return (
       <TouchableOpacity style={styles.category} onPress={() => this.props.navigation.navigate("Category", {categoryName: item.name})}>{/*This marks a clickable outline for the category names*/}
         <View style={[styles.categoryCircle,{backgroundColor: item.background}]}>{/*This renders the category circle with a specified background colour*/}
-          <Image source={this.category[index]} style={styles.categoryIcon}/>{/*This renders the category icon*/}
+          <Image source={Constants.img.category[item.name]} style={styles.categoryIcon}/>{/*This renders the category icon*/}
         </View>
         <Text style={styles.categoryText}>{item.name}</Text>
       </TouchableOpacity>

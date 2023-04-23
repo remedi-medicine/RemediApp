@@ -58,6 +58,14 @@ const Constants = {
         upArrow: require('../assets/images/up-arrow.png'),
 
         banner: [require('../assets/images/banner-1.jpg'), require('../assets/images/banner-2.jpg'), require('../assets/images/banner-3.png')],
+        category: {
+          "Dental": require('../assets/images/dental.png'),
+          "Wellness": require('../assets/images/wellness.png'),
+          "Homeopathy": require('../assets/images/homeo.png'),
+          "Eye Care": require('../assets/images/eyecare.png'),
+          "Skin & Hair": require('../assets/images/skinhair.png'),
+          "Bone": require('../assets/images/bone.png'),
+        }
     },
     //This is the list of fonts used in the app
     fonts : {
