@@ -8,7 +8,7 @@ Remedi is a medicine delivery app that allows users to order medicines from near
 - [`assets`](/assets/) - Contains the assets used in the app
 - [`ios`](/ios/) - Contains the iOS project
 - [`Constants`](/Constants/) - Contains the constants used in the app
-- [`DummyData`](/DummyData/) - Contains the dummy data used in the app
+- [`components`](/components/) - Contains repeating components
 - [`screens`](/screens/) - Contains the screens used in the app
 
 ### Assets
@@ -36,43 +36,35 @@ Due to this file, we only need to import the [`Constants.js`](/Constants//Consta
 
 Multiple references aren't required to be made to the same constant. This makes the code more readable and maintainable. This also reduces the chances of errors and chances of redundancy.
 
-### DummyData
-
-- [`Category.json`](/DummyData/Category.json) - Contains the dummy list of categories
-- [`CustList.json`](/DummyData/CustList.json) - Contains the dummy list of customers's lists created
-- [`Deal.json`](/DummyData/Deal.json) - Contains the dummy list of deals of the day
-- [`DrugList.json`](/DummyData/DrugList.json) - Contains the dummy list of drugs
-
-#### DrugList.json
-
-This file contains the dummy list of drugs. Each drug has the following properties:
-
-- `id` - The unique id of the drug
-- `name` - The name of the drug
-- `image` - The image of the drug via URL
-- `manufacturer` - The manufacturer of the drug
-- `price` - The price of the drug
-- `product_info` - The description of the drug
-
 ### Screens
 
-- [`Cart.js`](/screens/Cart.js) - The screen that shows the cart of the user {currently empty}
+- [`AddAddress.js`](/screens/AddAddress.js) - This screen allows the user to add a new address
+- [`Cart.js`](/screens/Cart.js) - The screen that shows the cart of the user
+- [`Category.js`](/screens/Category.js) - Users can view drugs according to the categories
 - [`Home.js`](screens/Home.js) - The screen that shows the home page of the app
 - [`List.js`](screens/List.js) - The screen that shows the named lists created by the user
-- [`Notification.js`](screens/Notification.js) - The screen that shows the notifications of the user {currently empty}
-- [`Profile.js`](screens/Profile.js) - The screen that shows the profile of the user {currently empty}
+- [`Login.js`](/screens/Login.js) - Login page of the app
+- [`Notification.js`](screens/Notification.js) - The screen that shows the notifications of the user
+- [`Product.js`](/screens/Product.js) - The screen where all information regarding a current drug is shown
+- [`Profile.js`](screens/Profile.js) - The screen that shows the profile of the user
+- [`Register.js`](/screens/Register.js) - Registration Page of the app
+- [`Search.js`](/screens/Search.js) - This page shows the output of a Search Query
+- [`SplashScreen.js`](/screens/SplashScreen.js) - This is the first page that is loaded
+- [`ViewAddress.js`](/screens//ViewAddress.js) - Users can view their addresses here
+- [`ViewDrugs.js`](/screens/ViewDrugs.js) - Users can view all available drugs here
 
-#### Home.js
+#### [`Home.js`](/screens//Home.js)
 
 This is the home screen of the app. It contains the following components:
 
-- A banner which shows the user's PFP and name
+- A banner which shows the user's profile photo, name & current location
 - A search bar
 - Top Categories to choose from
 - Banners of offers
 - Deals of the Day
+- All Products Available on Remedi
 
-#### List.js
+#### [`List.js`](/screens//List.js)
 
 This is the screen that shows the named lists created by the user. It contains the following components:
 
@@ -83,21 +75,44 @@ This is the screen that shows the named lists created by the user. It contains t
   - Drug name
 - A CTA for Pay Now with the total price of the list
 
+#### [Product.js](/screens//Product.js)
+
+This is the main page where the user can view all details related to a product. The following details are shown:
+
+- Image
+- Name
+- Manufacturer Name
+- Ratings
+- Price
+- MRP
+- Discount (if any)
+- Option to Add to Cart
+- Product Information:
+  - Ingredients
+  - Key Benefits
+  - Other Information as provided
+  - Category
+- Ratings
+- Top Review
+- Expiry Date
+- Manufacturer Address
+- Country of Origin
+
 ## Important Files
 
 - [`App.js`](/App.js) - The main file of the app
+- [`AppBottomTab.js`](/AppBottomTab.js) - Bottom Tab Navigation for the app
 - [`app.json`](/app.json) - The configuration file of the app
 - [`package.json`](/package.json) - The package file of the app
 - [`index.js`](/index.js) - The entry point of the app
 
 ### App.js
 
-This is the main file of the app. Among others, it contains the code for the bottom navigation bar.
-Design/Layout of all icons in the bottom navigation bar is done in this file.
+This is the main file of the app. This file is called when app is run. It contains the main Stack Navigation Container.
 
 ## Initial Setup
 
-- Install Node.js
+- Install [Node.js](https://nodejs.org/en/download), [Android Studio](https://developer.android.com/studio) and install SDK as required [here](https://reactnative.dev/docs/environment-setup?guide=native)
 - In the project directory, run `npm install` to install all the dependencies
 - All the dependencies are installed and the app is ready to run
 - In the terminal, run `npx react-native run-android` to run the app on an Android device
@@ -107,3 +122,10 @@ Design/Layout of all icons in the bottom navigation bar is done in this file.
 - [`react-native`](https://www.npmjs.com/package/react-native) - The core framework of the app
 - [`react-navigation`](https://reactnavigation.org/docs/getting-started/) - The navigation library used in the app
 - [`react-navigation/bottom-tabs`](https://reactnavigation.org/docs/bottom-tab-navigator/) - The bottom tab navigation library used in the app
+- [`@react-native-firebase/app`](https://rnfirebase.io/) - This Package Allows Us to Connect With Firebase
+- [`@react-native-firebase/auth`](https://rnfirebase.io/auth/usage) - This Package helps to communicate with the authentication module of Firebase
+- [`@react-native-firebase/database`](https://rnfirebase.io/database/usage) - This package helps to communicate with the Realtime Database
+- [`react-native-geolocation-service`](https://www.npmjs.com/package/react-native-geolocation-service) - This package helps fetch user location using JS GeoLocation API
+- [`react-native-progress`](https://www.npmjs.com/package/react-native-progress) - This is used to show various progress bars and loading circles
+- [`react-native-ratings`](https://www.npmjs.com/package/react-native-ratings) - This is used to display user ratings
+- [`react-native-razorpay`](https://www.npmjs.com/package/react-native-razorpay) - This module helps integrate RazorPay React Native SDK in our app
