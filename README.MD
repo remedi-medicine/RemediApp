@@ -2,7 +2,7 @@
 
 Remedi is a medicine delivery app that allows users to order medicines from nearby pharmacies and get them delivered to their doorstep. It is a cross-platform app built using React Native and Firebase.
 
-## Initial Folders
+## Relevant Folders
 
 - [`android`](/android/) - Contains the Android project
 - [`assets`](/assets/) - Contains the assets used in the app
@@ -75,7 +75,7 @@ This is the screen that shows the named lists created by the user. It contains t
   - Drug name
 - A CTA for Pay Now with the total price of the list
 
-#### [Product.js](/screens//Product.js)
+#### [`Product.js`](/screens//Product.js)
 
 This is the main page where the user can view all details related to a product. The following details are shown:
 
@@ -106,7 +106,7 @@ This is the main page where the user can view all details related to a product. 
 - [`package.json`](/package.json) - The package file of the app
 - [`index.js`](/index.js) - The entry point of the app
 
-### App.js
+### [`App.js`](/App.js)
 
 This is the main file of the app. This file is called when app is run. It contains the main Stack Navigation Container.
 
@@ -129,3 +129,18 @@ This is the main file of the app. This file is called when app is run. It contai
 - [`react-native-progress`](https://www.npmjs.com/package/react-native-progress) - This is used to show various progress bars and loading circles
 - [`react-native-ratings`](https://www.npmjs.com/package/react-native-ratings) - This is used to display user ratings
 - [`react-native-razorpay`](https://www.npmjs.com/package/react-native-razorpay) - This module helps integrate RazorPay React Native SDK in our app
+
+## APIs
+
+### [OpenCageData](https://opencagedata.com/dashboard#geocoding)
+
+OpenCage allows use to geocode the latitude & logitude values received from the `react-native-geolocation-service` to relevant address.
+This is used to communicate the correct address to the user (who may not be able to understand latitude and longitude)
+
+### [RazorPay Order API](https://razorpay.com/docs/api/orders/#orders-api)
+
+We use RazorPay Order API to create an order in RazorPay which is then marked complete when successful payment has been made
+
+### [RazorPay Payments API](https://razorpay.com/docs/api/payments#payments-api)
+
+RazorPay Payments API is integrated into the RazorPay React Native SDK. This is used to process a payment request and handle the success/failure or any other error during the payment process
