@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, View, Text, Modal, ToastAndroid, FlatList, TouchableOpacity, Image } from "react-native";
 import Constants from "../Constants/Constants";
+import Category from "../Constants/Category.json";
 import Header from "../components/Header";
 
 import auth from '@react-native-firebase/auth';
@@ -45,7 +46,6 @@ export default class Notification extends React.Component {
       this.setState({showLoading2: false});})
     remediData.child("CategoryList").child(this.state.categoryName).on('value', (snapshot) => {
       categoryList = snapshot.val() ? snapshot.val() : [];
-      console.log("Category List: ", categoryList);
       this.setState({showSearching: false});})
   }
 
@@ -117,6 +117,15 @@ export default class Notification extends React.Component {
       <>
         <View style={styles.container}>
           <Header title={this.state.categoryName} showSearch={true} onBack={() => this.props.navigation.goBack()} isSearch={false} navigation={this.props.navigation}/>
+          <View style={{maxHeight: 45}}>
+          <FlatList
+            horizontal={true}
+            data={Category}
+            renderItem={({item}) =>
+              <Text style={[styles.heading, {fontSize: 16, color: item.name==this.state.categoryName ? Constants.colors.black : Constants.colors.primaryGreen}]} onPress={() => item.name==this.state.categoryName ? null : this.props.navigation.replace("Category", {categoryName: item.name})}>
+              {item.name}</Text>}
+            style={{padding: 10}}
+          /></View>
           {categoryList.length > 0 ?
             <FlatList
               data={categoryList}
@@ -159,6 +168,13 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: Constants.colors.primaryGreen,
         fontFamily: Constants.fonts.bold,
+    },
+    heading: {
+      fontSize: 20,
+      fontFamily: Constants.fonts.bold,
+      color: Constants.colors.primaryBlue,
+      marginHorizontal: 10,
+      textAlign: 'left',
     },
     drugView: {
       width: '90%',
