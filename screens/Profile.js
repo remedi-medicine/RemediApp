@@ -64,7 +64,9 @@ renderProfileSection() {
             <View style={styles.separator}/>
             
             <this.ProfileValue icon={Constants.img.logout} label="Logout"
-                onPress={() => {this.state.user.signOut; this.props.navigation.replace('Login');}}
+                onPress={() => {auth().signOut()
+                  .then(() => this.props.navigation.replace("SplashScreen"))
+                  .catch(error => console.log(error))}}
             />
         </View>
     )

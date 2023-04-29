@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text, Image, Dimensions, TextInput, ScrollView, Pressable, Modal } from "react-native";
+import { StyleSheet, View, Text, Image, Dimensions, TextInput, ScrollView, Pressable, Modal, TouchableOpacity } from "react-native";
 
 import auth from '@react-native-firebase/auth';
 
@@ -18,11 +18,8 @@ export default class Cart extends React.Component {
             password: '',
             showBlank: false,
             showProgress: false,
+            hidePassword: true,
         }
-    }
-    
-    componentDidMount = () => {
-        // setTimeout(() => {this.setState({showProgress: false})}, 30000);
     }
 
     loginUser = () => {
@@ -49,6 +46,27 @@ export default class Cart extends React.Component {
             });
     }
 
+    forgotPassword = () => {
+      if (this.state.email == '') {
+        alert("Please Enter Email & Select Forgot Password");
+        return;
+      }
+      auth()
+        .sendPasswordResetEmail(this.state.email)
+        .then(() => {
+          alert('Password reset email sent!', 'Please follow instructions in the email to reset your password.\nLogin with your new password');
+        })
+        .catch(error => {
+          if (error.code === 'auth/invalid-email') {
+            alert('That email address is invalid!');
+          }
+          else if (error.code === 'auth/user-not-found') {
+            alert(error.message);
+          }
+          console.error(error);
+        });
+    }
+
     render() {
         return(
             <>
@@ -69,19 +87,27 @@ export default class Cart extends React.Component {
                                 onFocus={() => {this.setState({showBlank: true}); this.scrollView.scrollToEnd({animated: true})}}
                                 onBlur={() => this.setState({showBlank: false})}
                             />
-                            <TextInput
-                                style={[styles.input, {marginTop: 26}]}
-                                value={this.state.password}
-                                placeholder="Enter Your Password"
-                                placeholderTextColor={Constants.colors.centralGray}
-                                autoComplete='password'
-                                onChangeText={(newPassword) => this.setState({password: newPassword})}
-                                onFocus={() => {this.setState({showBlank: true}); this.scrollView.scrollToEnd({animated: true})}}
-                                onBlur={() => this.setState({showBlank: false})}
-                                secureTextEntry={true}
-                            />
-                            <Text style={styles.forgotPassword}>Forgot Password?</Text>
-                            <Pressable style={styles.loginButton} onPress={() => {console.log("Login Button Clicked");this.loginUser()}}>
+                            <View>
+                              <TextInput
+                                  style={[styles.input, {marginTop: 26, paddingRight: 40}]}
+                                  value={this.state.password}
+                                  placeholder="Enter Your Password"
+                                  placeholderTextColor={Constants.colors.centralGray}
+                                  autoComplete='password'
+                                  onChangeText={(newPassword) => this.setState({password: newPassword})}
+                                  onFocus={() => {this.setState({showBlank: true}); this.scrollView.scrollToEnd({animated: true})}}
+                                  onBlur={() => this.setState({showBlank: false})}
+                                  secureTextEntry={this.state.hidePassword}
+                              />
+                              <TouchableOpacity style={styles.showIcon}
+                                onPress={() => this.setState({hidePassword : !this.state.hidePassword})}>
+                                <Image
+                                  source={this.state.hidePassword ? Constants.img.hidePassword : Constants.img.showPassword}
+                                  style={{width: 25, height: 25}}/>
+                              </TouchableOpacity>
+                            </View>
+                            <Text style={styles.forgotPassword} onPress={() => this.forgotPassword()}>Forgot Password?</Text>
+                            <Pressable style={styles.loginButton} onPress={() => {this.loginUser()}}>
                                 <Text style={styles.loginText}>Sign In</Text>
                             </Pressable>
                             <Text style={styles.noAccount}>
@@ -108,7 +134,6 @@ export default class Cart extends React.Component {
                                 spinDuration={3000}/>
                                 <View style={{width: 28, height: 28, position: 'absolute', alignSelf: 'center', backgroundColor: Constants.colors.white, borderRadius: 30}}/>
                             </View>
-                            {/* <Text style={styles.modalHeading}>Log In</Text> */}
                             <Text style={styles.modalText}>Please Wait Will We Log You In....</Text>
                         </View>
                     </View>
@@ -189,6 +214,12 @@ const styles = StyleSheet.create({
         fontFamily: Constants.fonts.regular,
         fontSize: 16,
         color: Constants.colors.black,
+    },
+    showIcon: 
+    {
+      position: 'absolute',
+      top: '50%',
+      right: 40,
     },
     forgotPassword: {
         fontSize: 16,

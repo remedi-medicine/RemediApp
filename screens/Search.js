@@ -53,26 +53,20 @@ export default class Notification extends React.Component {
   }
 
   getSearchList = () => {
-    console.log("Searching for: ", this.state.searchText);
     let searchText = this.state.searchText;
-    console.log("Length: ", Object.keys(DrugList).length);
     let searchList = [];
     for (let i=0; i<Object.keys(DrugList).length; i++) {
       let drugID = Object.keys(DrugList)[i];
       let drug = DrugList[drugID];
-      console.log("Checking: ", drug.name);
       if (drug.name.toLowerCase().includes(searchText.toLowerCase())) {
-        console.log("Match: ", drug.name);
         searchList.push(drugID);
       }
       else if (drug.manufacturer.toLowerCase().includes(searchText.toLowerCase())) {
-        console.log("Match: ", drug.name);
         searchList.push(drugID);
       }
       else {
         for (let i = 0; i < drug.product_info.length; i++) {
           if (drug.product_info[i].toLowerCase().includes(searchText.toLowerCase())) {
-            console.log("Match: ", drug.name);
             searchList.push(drugID);
             break;
           }

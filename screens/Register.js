@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text, Image, Dimensions, TextInput, ScrollView, Pressable, Modal } from "react-native";
+import { StyleSheet, View, Text, Image, Dimensions, TextInput, ScrollView, Pressable, Modal, TouchableOpacity } from "react-native";
 
 import auth from '@react-native-firebase/auth';
 
@@ -20,16 +20,16 @@ export default class Cart extends React.Component {
             rePassword: '',
             showBlank: false,
             showProgress: false,
+            hidePassword: true,
+            hideRePassword: true,
         }
     }
     
     componentDidMount = () => {
         setTimeout(() => {this.setState({showProgress: false})}, 30000);
-        // setTimeout(() => {this.props.navigation.replace("Register")}, 1500);
     }
 
     registerUser = () => {
-        console.log("Registering user: ", this.state.name, this.state.email, this.state.password, this.state.rePassword);
         if ( this.state.name != '' && this.state.email !='' &&
             this.state.password == this.state.rePassword && this.state.rePassword != '')
         {
@@ -89,19 +89,28 @@ export default class Cart extends React.Component {
                                 onFocus={() => {this.setState({showBlank: true}); this.scrollView.scrollToEnd({animated: true})}}
                                 onBlur={() => this.setState({showBlank: false})}
                             />
-                            <TextInput
-                                style={[styles.input, {marginTop: 26}]}
-                                value={this.state.password}
-                                placeholder="Enter Your Password"
-                                placeholderTextColor={Constants.colors.centralGray}
-                                autoComplete='password'
-                                onChangeText={(newPassword) => this.setState({password: newPassword})}
-                                onFocus={() => {this.setState({showBlank: true}); this.scrollView.scrollToEnd({animated: true})}}
-                                onBlur={() => this.setState({showBlank: false})}
-                                secureTextEntry={true}
-                            />
-                            <TextInput
-                                style={[styles.input, {marginTop: 26}]}
+                            <View>
+                              <TextInput
+                                  style={[styles.input, {marginTop: 26, paddingRight: 40}]}
+                                  value={this.state.password}
+                                  placeholder="Enter Your Password"
+                                  placeholderTextColor={Constants.colors.centralGray}
+                                  autoComplete='password'
+                                  onChangeText={(newPassword) => this.setState({password: newPassword})}
+                                  onFocus={() => {this.setState({showBlank: true}); this.scrollView.scrollToEnd({animated: true})}}
+                                  onBlur={() => this.setState({showBlank: false})}
+                                  secureTextEntry={this.state.hidePassword}
+                              />
+                              <TouchableOpacity style={styles.showIcon}
+                                onPress={() => this.setState({hidePassword : !this.state.hidePassword})}>
+                                <Image
+                                  source={this.state.hidePassword ? Constants.img.hidePassword : Constants.img.showPassword}
+                                  style={{width: 25, height: 25}}/>
+                              </TouchableOpacity>
+                            </View>
+                            <View>
+                              <TextInput
+                                style={[styles.input, {marginTop: 26, paddingRight: 40}]}
                                 value={this.state.rePassword}
                                 placeholder="Re-enter Your Password"
                                 placeholderTextColor={Constants.colors.centralGray}
@@ -109,8 +118,15 @@ export default class Cart extends React.Component {
                                 onChangeText={(newRePassword) => this.setState({rePassword: newRePassword})}
                                 onFocus={() => {this.setState({showBlank: true}); this.scrollView.scrollToEnd({animated: true})}}
                                 onBlur={() => this.setState({showBlank: false})}
-                                secureTextEntry={true}
-                            />
+                                secureTextEntry={this.state.hideRePassword}
+                              />
+                              <TouchableOpacity style={styles.showIcon}
+                                onPress={() => this.setState({hideRePassword : !this.state.hideRePassword})}>
+                                <Image
+                                  source={this.state.hideRePassword ? Constants.img.hidePassword : Constants.img.showPassword}
+                                  style={{width: 25, height: 25}}/>
+                              </TouchableOpacity>
+                            </View>
                             {this.state.password == this.state.rePassword || this.state.rePassword == '' ? null : <Text style={styles.unmatchPassword}>Passwords Do Not Match</Text>}
                             <Pressable style={styles.registerButton} onPress={() => {this.registerUser()}}>
                                 <Text style={styles.registerText}>Sign Up</Text>
@@ -139,7 +155,6 @@ export default class Cart extends React.Component {
                                 spinDuration={3000}/>
                                 <View style={{width: 28, height: 28, position: 'absolute', alignSelf: 'center', backgroundColor: Constants.colors.white, borderRadius: 30}}/>
                             </View>
-                            {/* <Text style={styles.modalHeading}>Log In</Text> */}
                             <Text style={styles.modalText}>Please Wait Will We Register User</Text>
                         </View>
                     </View>
@@ -220,6 +235,12 @@ const styles = StyleSheet.create({
         fontFamily: Constants.fonts.regular,
         fontSize: 16,
         color: Constants.colors.black,
+    },
+    showIcon: 
+    {
+      position: 'absolute',
+      top: '50%',
+      right: 40,
     },
     unmatchPassword: {
         fontSize: 16,
