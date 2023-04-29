@@ -21,10 +21,6 @@ export default class Cart extends React.Component {
             hidePassword: true,
         }
     }
-    
-    componentDidMount = () => {
-        // setTimeout(() => {this.setState({showProgress: false})}, 30000);
-    }
 
     loginUser = () => {
         if(this.state.email == '' || this.state.password == '') {
@@ -111,7 +107,7 @@ export default class Cart extends React.Component {
                               </TouchableOpacity>
                             </View>
                             <Text style={styles.forgotPassword} onPress={() => this.forgotPassword()}>Forgot Password?</Text>
-                            <Pressable style={styles.loginButton} onPress={() => {console.log("Login Button Clicked");this.loginUser()}}>
+                            <Pressable style={styles.loginButton} onPress={() => {this.loginUser()}}>
                                 <Text style={styles.loginText}>Sign In</Text>
                             </Pressable>
                             <Text style={styles.noAccount}>
@@ -138,7 +134,6 @@ export default class Cart extends React.Component {
                                 spinDuration={3000}/>
                                 <View style={{width: 28, height: 28, position: 'absolute', alignSelf: 'center', backgroundColor: Constants.colors.white, borderRadius: 30}}/>
                             </View>
-                            {/* <Text style={styles.modalHeading}>Log In</Text> */}
                             <Text style={styles.modalText}>Please Wait Will We Log You In....</Text>
                         </View>
                     </View>

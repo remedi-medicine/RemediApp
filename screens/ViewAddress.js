@@ -82,30 +82,18 @@ export default class Notification extends React.Component {
       ToastAndroid.show("Please select an address", ToastAndroid.SHORT);
       return;
     }
+    this.setState({showLoading: true})
     let amount= this.props.route.params.total*100;
     let currency= "INR";
     let receipt= encodeURI("receipt_01");
-    console.log("Proceeding to payment");
     fetch(`https://remedi-order-api.onrender.com/create_order?amount=${amount}&currency=${currency}&receipt=${receipt}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      // body:JSON.stringify(
-      // {
-      //   amount: this.props.route.params.total*100,
-      //   currency: "INR",
-      //   receipt: "order_rcptid_11",
-      //   notes: {
-      //     address: Address[this.state.selectedAddress].addressLine1+", "+Address[this.state.selectedAddress].addressLine2+", "+Address[this.state.selectedAddress].city+" - "+Address[this.state.selectedAddress].pincode,
-      //     mobile: Address[this.state.selectedAddress].mobile,
-      //     name: Address[this.state.selectedAddress].billTo,
-      //   },
-      // }),
     })
     .then((response) => response.json())
     .then((json) => {
-      console.log(json['id']);
       let options = {
         currency: "INR",
         key: "rzp_test_nFKekgDUCv55L4",
@@ -118,9 +106,11 @@ export default class Notification extends React.Component {
         },
         theme: {color: Constants.colors.primaryGreen},
       };
+      this.setState({showLoading: false})
       RazorpayCheckout.open(options)
         .then((data) => {
-          ToastAndroid.show("Payment Successful: "+data.razorpay_payment_id, ToastAndroid.SHORT);})
+          ToastAndroid.show("Payment Successful!", ToastAndroid.SHORT);
+          this.props.navigation.push("AppBottomTab", {screen: "Home"});})
         .catch((error) => {
           ToastAndroid.show("Payment Failed: "+error.code+" | "+error.description, ToastAndroid.SHORT);}
         );

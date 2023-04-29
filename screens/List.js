@@ -36,8 +36,6 @@ export default class List extends React.Component {
 
   //This function is called when this screen is rendered for the absolute first time
   componentDidMount = () => {
-    // let CustList = {};
-    // let DrugList = [];
     let user = this.state.user;
     let uid = user.uid;
     userData.child(uid).child('MyList').orderByKey().on('value', (snapshot) => {

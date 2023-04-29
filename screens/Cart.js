@@ -54,7 +54,6 @@ export default class Cart extends React.Component {
 
   renderCartList = (drugID) => {
     let drug = DrugList[drugID];
-    console.log("Price: ", drug?.price, "Quantity: ", userCart[drugID], "Total: ", drug?.price * userCart[drugID])
     return (
       <> 
         <TouchableOpacity style={styles.drugView} onPress={() => this.props.navigation.push("Product", {drugID: drugID})}>

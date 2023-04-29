@@ -143,4 +143,4 @@ We use RazorPay Order API to create an order in RazorPay which is then marked co
 
 ### [RazorPay Payments API](https://razorpay.com/docs/api/payments#payments-api)
 
-RazorPay Payments API is integrated into the RazorPay React Native SDK. This is used to process a payment request and handle the success/failure or any other error during the payment process
+RazorPay Payments API is integrated into the RazorPay React Native SDK. This is used to process a payment request and handle the success/failure or any other error during the payment process.

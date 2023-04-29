@@ -65,7 +65,6 @@ export default class Home extends React.Component {
       position => {
         latitude = position.coords.latitude,
         longitude = position.coords.longitude,
-        console.log("GeoLocation: ", latitude, longitude)
         fetch(`https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=bf089be2d5324c1da0876446fff7d004`)
           .then(response => response.json())
           .then(data => {

@@ -27,11 +27,9 @@ export default class Cart extends React.Component {
     
     componentDidMount = () => {
         setTimeout(() => {this.setState({showProgress: false})}, 30000);
-        // setTimeout(() => {this.props.navigation.replace("Register")}, 1500);
     }
 
     registerUser = () => {
-        console.log("Registering user: ", this.state.name, this.state.email, this.state.password, this.state.rePassword);
         if ( this.state.name != '' && this.state.email !='' &&
             this.state.password == this.state.rePassword && this.state.rePassword != '')
         {
@@ -157,7 +155,6 @@ export default class Cart extends React.Component {
                                 spinDuration={3000}/>
                                 <View style={{width: 28, height: 28, position: 'absolute', alignSelf: 'center', backgroundColor: Constants.colors.white, borderRadius: 30}}/>
                             </View>
-                            {/* <Text style={styles.modalHeading}>Log In</Text> */}
                             <Text style={styles.modalText}>Please Wait Will We Register User</Text>
                         </View>
                     </View>
