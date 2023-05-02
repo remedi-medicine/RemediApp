@@ -10,7 +10,6 @@ import Geolocation from 'react-native-geolocation-service';
 
 import {displayName as appName, subtitle as subName} from "../app.json";
 import Constants from "../Constants/Constants";
-import Category from "../Constants/Category";
 
 const { width, height } = Dimensions.get("window");
 
@@ -19,7 +18,7 @@ const remediData = firebase
   .database('https://remedi---instant-medicine-default-rtdb.asia-southeast1.firebasedatabase.app/')
   .ref('RemediData');
 
-let DrugList = {};
+let DrugList = {}, Category=[], Banners=[];
 
 export default class Home extends React.Component {
   //Constructor
@@ -30,6 +29,7 @@ export default class Home extends React.Component {
       deal: [],
       showLoading1: true,
       showLoading2: true,
+      showLoading3: true,
       refreshing: false,
       searchText: '',
       randomIndex: 0,
@@ -45,6 +45,16 @@ export default class Home extends React.Component {
     
     remediData.child('Deals').once('value').then(snapshot => {
       this.setState({deal: snapshot.val(), showLoading2: false});
+    });
+    
+    remediData.child('Category').on('value', (snapshot) => {
+      Category = snapshot.val();
+      this.setState({showLoading3: false});
+    });
+    
+    remediData.child('Banners').on('value', (snapshot) => {
+      Banners = snapshot.val();
+      this.setState({showLoading3: false});
     });
 
     PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(granted => {
@@ -103,7 +113,7 @@ export default class Home extends React.Component {
     return (
       <TouchableOpacity style={styles.category} onPress={() => this.props.navigation.navigate("Category", {categoryName: item.name})}>{/*This marks a clickable outline for the category names*/}
         <View style={[styles.categoryCircle,{backgroundColor: item.background}]}>{/*This renders the category circle with a specified background colour*/}
-          <Image source={Constants.img.category[item.name]} style={styles.categoryIcon}/>{/*This renders the category icon*/}
+          <Image source={{uri: item.icon}} style={styles.categoryIcon}/>{/*This renders the category icon*/}
         </View>
         <Text style={styles.categoryText}>{item.name}</Text>
       </TouchableOpacity>
@@ -114,7 +124,7 @@ export default class Home extends React.Component {
   //Function is called by FlatList
   renderBanner = (item, index) => {
     return (
-      <Image source={item} style={styles.bannerImage}/>//This renders the banner image
+      <Image source={{uri: item}} style={styles.bannerImage}/>//This renders the banner image
     );
   }
 
@@ -196,7 +206,7 @@ export default class Home extends React.Component {
             {/*This creates a flatlist of banner images*/}
             <FlatList
               horizontal
-              data={Constants.img.banner}
+              data={Banners}
               style={{marginTop: 24}}
               renderItem={({item, index}) => (this.renderBanner(item, index))}/>
                     
@@ -228,7 +238,7 @@ export default class Home extends React.Component {
             <View style={{height: 100}}/>
         </ScrollView>
         <Modal
-          visible={this.state.showLoading1 || this.state.showLoading2}
+          visible={this.state.showLoading1 || this.state.showLoading2 || this.state.showLoading3}
           transparent={true}
           animationType="fade">
           <View style={styles.modalContainer}>

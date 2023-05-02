@@ -1,7 +1,6 @@
 import React from "react";
 import { StyleSheet, View, Text, Modal, ToastAndroid, FlatList, TouchableOpacity, Image } from "react-native";
 import Constants from "../Constants/Constants";
-import Category from "../Constants/Category.json";
 import Header from "../components/Header";
 
 import auth from '@react-native-firebase/auth';
@@ -19,7 +18,7 @@ const userData = firebase
   .database('https://remedi---instant-medicine-default-rtdb.asia-southeast1.firebasedatabase.app/')
   .ref('UserData');
 
-let DrugList = {}, userCart = {};
+let DrugList = {}, userCart = {}, Category=[];
 let categoryList = [];
 
 export default class Notification extends React.Component {
@@ -29,6 +28,7 @@ export default class Notification extends React.Component {
       user : auth().currentUser,
       showLoading1: true,
       showLoading2: true,
+      showLoading3: true,
       showSearching: false,
       categoryName: this.props.route.params.categoryName,
     };
@@ -44,6 +44,9 @@ export default class Notification extends React.Component {
     remediData.child('DrugList').on('value', (snapshot) => {
       DrugList = snapshot.val();
       this.setState({showLoading2: false});})
+    remediData.child('Category').on('value', (snapshot) => {
+      Category = snapshot.val();
+      this.setState({showLoading3: false});})
     remediData.child("CategoryList").child(this.state.categoryName).on('value', (snapshot) => {
       categoryList = snapshot.val() ? snapshot.val() : [];
       this.setState({showSearching: false});})
@@ -137,7 +140,7 @@ export default class Notification extends React.Component {
           <Text style={{alignSelf: 'center', color: Constants.colors.centralGray, fontFamily: Constants.fonts.semibold, fontSize: 20, marginTop: 150}}>Nothing Came Up</Text>}
         </View>
         <Modal
-          visible={this.state.showLoading1 || this.state.showLoading2 || this.state.showSearching}
+          visible={this.state.showLoading1 || this.state.showLoading2 || this.state.showLoading3 || this.state.showSearching}
           transparent={true}
           animationType="fade">
           <View style={styles.modalContainer}>
