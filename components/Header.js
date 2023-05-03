@@ -1,8 +1,8 @@
 import React from "react";
-import { StyleSheet, View, Text, TouchableOpacity, Image, ToastAndroid, TextInput } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Image, TextInput } from "react-native";
 import Constants from "../Constants/Constants";
 
-export default class Cart extends React.Component {
+export default class Header extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

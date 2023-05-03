@@ -5,11 +5,11 @@ import { Dimensions } from "react-native";
 import auth from '@react-native-firebase/auth';
 import { firebase } from '@react-native-firebase/database';
 
-import * as Progress from "react-native-progress";
 import Geolocation from 'react-native-geolocation-service';
 
 import {displayName as appName, subtitle as subName} from "../app.json";
 import Constants from "../Constants/Constants";
+import LoadingModal from "../components/LoadingModal";
 
 const { width, height } = Dimensions.get("window");
 
@@ -237,24 +237,7 @@ export default class Home extends React.Component {
               renderItem={({item, index}) => (this.renderAllDrugs(item, index))}/>
             <View style={{height: 100}}/>
         </ScrollView>
-        <Modal
-          visible={this.state.showLoading1 || this.state.showLoading2 || this.state.showLoading3}
-          transparent={true}
-          animationType="fade">
-          <View style={styles.modalContainer}>
-            <View style={styles.modal}>
-              <View style={{justifyContent: 'center'}}>
-                <Progress.CircleSnail
-                  indeterminate={true}
-                  size={60}
-                  color={Constants.colors.primaryGreen}
-                  style={{backgroundColor: 'white'}}
-                  spinDuration={3000}/>
-                <View style={{width: 48, height: 48, position: 'absolute', alignSelf: 'center', backgroundColor: Constants.colors.white, borderRadius: 30}}/>
-              </View>
-            </View>
-          </View>
-        </Modal>
+        <LoadingModal visible={this.state.showLoading1 || this.state.showLoading2 || this.state.showLoading3}/>
       </>
     );
   }
@@ -452,19 +435,5 @@ const styles = StyleSheet.create({
     fontFamily: Constants.fonts.bold,
     alignSelf: 'center',
     marginEnd: 10,
-  },
-  modalContainer: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modal: {
-    backgroundColor: Constants.colors.white,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-    flexDirection: 'row'
   },
 });

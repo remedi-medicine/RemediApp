@@ -2,11 +2,11 @@ import React from "react";
 import { StyleSheet, View, Text, FlatList, Modal, Dimensions, TouchableOpacity, Pressable, ToastAndroid, ScrollView, Image } from "react-native";
 import Constants from "../Constants/Constants";
 import Header from "../components/Header";
+import LoadingModal from "../components/LoadingModal";
+import globalStyles from "../Constants/globalStyles";
 
 import auth from '@react-native-firebase/auth';
 import { firebase } from '@react-native-firebase/database';
-
-import * as Progress from "react-native-progress";
 
 import RazorpayCheckout from "react-native-razorpay";
 
@@ -135,30 +135,13 @@ export default class Notification extends React.Component {
               showsVerticalScrollIndicator
               ItemSeparatorComponent={() => <View style={{height: 20}}/>}
             />
-            <Pressable style={styles.continueButton} onPress={() => this.proceedToPayment()}>
-              <Text style={styles.continueText}>Continue to Payment</Text>
+            <Pressable style={[globalStyles.ctaButton, {marginTop: 40,}]} onPress={() => this.proceedToPayment()}>
+              <Text style={globalStyles.ctaText}>Continue to Payment</Text>
             </Pressable>
             <View style={{height: 10}}/>
           </ScrollView>
         </View>
-        <Modal
-          visible={this.state.showLoading}
-          transparent={true}
-          animationType="fade">
-          <View style={styles.modalContainer}>
-            <View style={styles.modal}>
-              <View style={{justifyContent: 'center'}}>
-                <Progress.CircleSnail
-                  indeterminate={true}
-                  size={60}
-                  color={Constants.colors.primaryGreen}
-                  style={{backgroundColor: 'white'}}
-                  spinDuration={3000}/>
-                <View style={{width: 48, height: 48, position: 'absolute', alignSelf: 'center', backgroundColor: Constants.colors.white, borderRadius: 30}}/>
-              </View>
-            </View>
-          </View>
-        </Modal>
+        <LoadingModal visible={this.state.showLoading}/>
       </>
     );
   }
@@ -198,37 +181,5 @@ const styles = StyleSheet.create({
     borderWidth: 1, 
     alignSelf: 'center', 
     marginHorizontal:0.025*width
-  },
-  continueButton: {
-    width: '75%',
-    height: 60,
-    backgroundColor: Constants.colors.primaryGreen,
-    borderRadius: 20,
-    alignSelf: 'center',
-    fontFamily: Constants.fonts.regular,
-    fontSize: 16,
-    color: Constants.colors.white,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 40,
-  },
-  continueText: {
-    fontSize: 20,
-    fontFamily: Constants.fonts.bold,
-    color: Constants.colors.white,
-  },
-  modalContainer: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modal: {
-    backgroundColor: Constants.colors.white,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-    flexDirection: 'row'
   },
 });

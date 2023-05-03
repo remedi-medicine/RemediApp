@@ -2,9 +2,11 @@ import React from "react";
 import { StyleSheet, View, Text, ScrollView, TextInput, Dimensions, TouchableOpacity, Pressable, Alert, ToastAndroid } from "react-native";
 import Constants from "../Constants/Constants";
 import Header from "../components/Header";
+import TextBox from "../components/TextBox";
 
 import auth from '@react-native-firebase/auth';
 import { firebase } from '@react-native-firebase/database';
+import globalStyles from "../Constants/globalStyles";
 
 const userData = firebase
   .app()
@@ -71,59 +73,49 @@ export default class Notification extends React.Component {
           <Header title={"Add Address"} onBack={() => this.props.navigation.goBack()} showSearch={false}/>
           <ScrollView style={styles.container}>
             <Text style={styles.heading}><Text>Bill To:</Text><Text style={{color: Constants.colors.red}}>*</Text></Text>
-            <TextInput
-              style={styles.input}
+            <TextBox
               value={this.state.billTo}
               placeholder="Bill To"
-              placeholderTextColor={Constants.colors.centralGray}
               autoComplete='name'
               onChangeText={(newBillTo) => this.setState({billTo: newBillTo})}
             />
             <Text style={styles.heading}><Text>Address:</Text><Text style={{color: Constants.colors.red}}>*</Text></Text>
-            <TextInput
-              style={styles.input}
+            <TextBox
               value={this.state.addressLine1}
               placeholder="House No & Building Name"
-              placeholderTextColor={Constants.colors.centralGray}
               onChangeText={(newAddressLine1) => this.setState({addressLine1: newAddressLine1})}
             />
-            <TextInput
-              style={styles.input}
+            <TextBox
               value={this.state.addressLine2}
               placeholder="Street Name & Area"
-              placeholderTextColor={Constants.colors.centralGray}
               onChangeText={(newAddressLine2) => this.setState({addressLine2: newAddressLine2})}
             />
             <View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 40}}>
               <View style={{alignSelf: 'flex-start'}}>
                 <Text style={[styles.heading,{marginStart: 0}]}><Text>City:</Text><Text style={{color: Constants.colors.red}}>*</Text></Text>
-                <TextInput
-                  style={[styles.input, {width: 0.35*width}]}
+                <TextBox
+                  style={{width: 0.35*width}}
                   value={this.state.city}
                   placeholder="City"
-                  placeholderTextColor={Constants.colors.centralGray}
                   onChangeText={(newCity) => this.setState({city: newCity})}
                 />
               </View>
               <View style={{alignSelf: 'flex-end'}}>
                 <Text style={[styles.heading,{marginStart: 0}]}><Text>Pincode:</Text><Text style={{color: Constants.colors.red}}>*</Text></Text>
-                <TextInput
-                  style={[styles.input, {width: 0.35*width,}]}
+                <TextBox
+                  style={{width: 0.35*width,}}
                   value={this.state.pincode}
                   placeholder="Pincode"
                   autoComplete="postal-code"
-                  placeholderTextColor={Constants.colors.centralGray}
                   onChangeText={(newPincode) => this.setState({pincode: newPincode})}
                 />
               </View>
             </View>
             <Text style={styles.heading}><Text>Mobile Number:</Text><Text style={{color: Constants.colors.red}}>*</Text></Text>
-            <TextInput
-              style={styles.input}
+            <TextBox
               value={this.state.mobile}
               placeholder="Mobile Number"
               autoComplete="tel-device"
-              placeholderTextColor={Constants.colors.centralGray}
               onChangeText={(newMobile) => this.setState({mobile: newMobile})}
             />
             <Text style={styles.heading}><Text>Address Type:</Text><Text style={{color: Constants.colors.red}}>*</Text></Text>
@@ -150,8 +142,8 @@ export default class Notification extends React.Component {
                     Other</Text>
               </TouchableOpacity>
             </View>
-            <Pressable style={styles.continueButton} onPress={() => this.saveAddress()}>
-              <Text style={styles.continueText}>Save & Continue</Text>
+            <Pressable style={[globalStyles.ctaButton, {marginTop: 40,}]} onPress={() => this.saveAddress()}>
+              <Text style={globalStyles.ctaText}>Save & Continue</Text>
             </Pressable>
           </ScrollView>
         </View>
@@ -178,20 +170,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 40,
     marginTop: 20,
   },
-  input: {
-    width: 0.85*width,
-    height: 50,
-    backgroundColor: Constants.colors.white,
-    borderRadius: 20,
-    alignSelf: 'center',
-    marginTop: 5,
-    paddingStart: 20,
-    fontFamily: Constants.fonts.regular,
-    fontSize: 16,
-    color: Constants.colors.black,
-    borderWidth: 1,
-    borderColor: Constants.colors.primaryGreen,
-  },
   cartButton: {
     width: 80,
     height: 30,
@@ -200,23 +178,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderColor: Constants.colors.primaryGreen,
     borderWidth: 1,
-  },
-  continueButton: {
-    width: '75%',
-    height: 60,
-    backgroundColor: Constants.colors.primaryGreen,
-    borderRadius: 20,
-    alignSelf: 'center',
-    fontFamily: Constants.fonts.regular,
-    fontSize: 16,
-    color: Constants.colors.white,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 40,
-  },
-  continueText: {
-    fontSize: 20,
-    fontFamily: Constants.fonts.bold,
-    color: Constants.colors.white,
   },
 });

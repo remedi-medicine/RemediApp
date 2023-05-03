@@ -9,6 +9,7 @@ import { firebase } from '@react-native-firebase/database';
 import { AirbnbRating } from "react-native-ratings";
 import * as Progress from "react-native-progress";
 import Geolocation from 'react-native-geolocation-service';
+import CartCard from "../components/CartCard";
 
 const remediData = firebase
   .app()
@@ -152,28 +153,18 @@ export default class Notification extends React.Component {
               <Text style={styles.price}>₹{this.state.drug.price}</Text>
               {this.state.drug.mrp != this.state.drug.price ? <Text style={styles.mrp}>₹{this.state.drug.mrp}</Text> : null}
               <Text style={styles.difference}>{this.getDifference()}</Text>
-
-              { userCart[this.state.drugID] ? 
-                <View style={[styles.cartButton, {borderColor: Constants.colors.primaryGreen, borderWidth: 1, flexDirection: 'row'}]}>
-                  { userCart[this.state.drugID] == 1 ?
-                    <TouchableOpacity onPress={() => this.deleteFromCart(this.state.drugID)}>
-                      <Image source={Constants.img.delete} style={styles.cartBtnIcons}/>
-                    </TouchableOpacity>
-                  :
-                    <TouchableOpacity onPress={() => this.updateCartCount(this.state.drugID, -1)}>
-                      <Image source={Constants.img.minus} style={styles.cartBtnIcons}/>
-                    </TouchableOpacity>
-                  }
-                  <Text style={{color: Constants.colors.black, fontFamily: Constants.fonts.semibold, fontSize: 15}}>{userCart[this.state.drugID]}</Text>
-                  <TouchableOpacity onPress={() => this.updateCartCount(this.state.drugID, +1)}>
-                    <Image source={Constants.img.plus} style={styles.cartBtnIcons}/>
-                  </TouchableOpacity>
-                </View>
-              :
-                <TouchableOpacity style={[styles.cartButton, {backgroundColor: Constants.colors.primaryGreen}]} onPress={() => this.addToCart(this.state.drugID)}>
-                  <Text style={{color: Constants.colors.white, fontFamily: Constants.fonts.semibold, fontSize: 15,}}>Add</Text>
-                </TouchableOpacity>
-              }
+              <View style={{alignSelf: 'center', position: 'absolute', right: 20,}}>
+                {userCart[this.state.drugID] ? 
+                  <CartCard
+                    quantity={userCart[this.state.drugID]}
+                    onDelete={() => this.deleteFromCart(this.state.drugID)}
+                    onMinus={() => this.updateCartCount(this.state.drugID, -1)}
+                    onPlus={() => this.updateCartCount(this.state.drugID, +1)}  
+                  />
+                :
+                  <CartCard isAdd={true} onAdd={() => this.addToCart(drugID)}/>
+                }
+              </View>
             </View>
             <View style={{height: 5, width: 5, backgroundColor: Constants.colors.centralGray, alignSelf: 'center', borderRadius: 5, marginVertical: 15}}/>
             <Text style={styles.deliveryHeading}><Text>Earliest Delivery by </Text><Text style={{color: Constants.colors.primaryGreen}}>Today, 07:00 PM</Text></Text>
@@ -342,9 +333,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    alignSelf: 'center',
-    position: 'absolute',
-    right: 20,
   },
   cartBtnIcons: {
     width: 12,

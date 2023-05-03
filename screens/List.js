@@ -3,11 +3,10 @@ import { StyleSheet, View, FlatList, Image, Text, TouchableOpacity, ScrollView, 
 
 import Constants from "../Constants/Constants";
 import Header from "../components/Header";
+import LoadingModal from "../components/LoadingModal";
 
 import auth from '@react-native-firebase/auth';
 import { firebase } from '@react-native-firebase/database';
-
-import * as Progress from "react-native-progress";
 
 const {height, width} = Dimensions.get('window');
 const remediData = firebase
@@ -153,24 +152,7 @@ export default class List extends React.Component {
                     /> : <Text style={{alignSelf: 'center', color: Constants.colors.centralGray, fontFamily: Constants.fonts.semibold, fontSize: 28, marginTop: 150}}>No List Added Yet</Text>}
                 </ScrollView>
               </View>
-              <Modal
-              visible={this.state.showLoading1 && this.state.showLoading2}
-              transparent={true}
-              animationType="fade">
-                <View style={styles.modalContainer}>
-                  <View style={styles.modal}>
-                    <View style={{justifyContent: 'center'}}>
-                      <Progress.CircleSnail
-                      indeterminate={true}
-                      size={60}
-                      color={Constants.colors.primaryGreen}
-                      style={{backgroundColor: 'white'}}
-                      spinDuration={3000}/>
-                        <View style={{width: 48, height: 48, position: 'absolute', alignSelf: 'center', backgroundColor: Constants.colors.white, borderRadius: 30}}/>
-                    </View>
-                  </View>
-                </View>
-              </Modal>
+              <LoadingModal visible={this.state.showLoading1 && this.state.showLoading2}/>
             </>
         );
     }
@@ -273,19 +255,5 @@ const styles = StyleSheet.create({
       fontSize: 16,
       color: 'white',
       fontFamily: Constants.fonts.bold,
-  },
-  modalContainer: {
-      flex: 1,
-      backgroundColor: 'rgba(0,0,0,0.5)',
-      justifyContent: 'center',
-      alignItems: 'center',
-  },
-  modal: {
-      backgroundColor: Constants.colors.white,
-      borderRadius: 20,
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 20,
-    flexDirection: 'row'
   },
 });

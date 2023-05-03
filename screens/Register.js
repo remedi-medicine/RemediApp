@@ -7,6 +7,7 @@ import * as Progress from "react-native-progress";
 
 import Constants from "../Constants/Constants";
 import {displayName as appName, subtitle as subName} from "../app.json";
+import globalStyles from "../Constants/globalStyles";
 
 const {width, height} = Dimensions.get('window');
 
@@ -128,8 +129,8 @@ export default class Cart extends React.Component {
                               </TouchableOpacity>
                             </View>
                             {this.state.password == this.state.rePassword || this.state.rePassword == '' ? null : <Text style={styles.unmatchPassword}>Passwords Do Not Match</Text>}
-                            <Pressable style={styles.registerButton} onPress={() => {this.registerUser()}}>
-                                <Text style={styles.registerText}>Sign Up</Text>
+                            <Pressable style={[globalStyles.ctaButton, {marginTop: 30,}]} onPress={() => {this.registerUser()}}>
+                                <Text style={globalStyles.ctaText}>Sign Up</Text>
                             </Pressable>
                             <Text style={styles.noAccount}>
                                 <Text>Already Have An Account?</Text>
@@ -249,24 +250,6 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         marginEnd: 0.1*width,
         marginTop: 10,
-    },
-    registerButton: {
-        width: 0.75*width,
-        height: 60,
-        backgroundColor: Constants.colors.primaryGreen,
-        borderRadius: 20,
-        alignSelf: 'center',
-        marginTop: 30,
-        fontFamily: Constants.fonts.regular,
-        fontSize: 16,
-        color: Constants.colors.white,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    registerText: {
-        fontSize: 20,
-        fontFamily: Constants.fonts.bold,
-        color: Constants.colors.white,
     },
     noAccount: {
         fontSize: 16,

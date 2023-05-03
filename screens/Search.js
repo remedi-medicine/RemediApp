@@ -2,11 +2,11 @@ import React from "react";
 import { StyleSheet, View, Text, Modal, ToastAndroid, FlatList, TouchableOpacity, Image } from "react-native";
 import Constants from "../Constants/Constants";
 import Header from "../components/Header";
+import CartCard from "../components/CartCard";
+import LoadingModal from "../components/LoadingModal";
 
 import auth from '@react-native-firebase/auth';
 import { firebase } from '@react-native-firebase/database';
-
-import * as Progress from "react-native-progress";
 
 const remediData = firebase
   .app()
@@ -91,25 +91,13 @@ export default class Notification extends React.Component {
           </View>
           <View style={{position: 'absolute', bottom: 25, right: 20}}>
             { userCart[drugID] ? 
-              <View style={[styles.cartButton, {borderColor: Constants.colors.primaryGreen, borderWidth: 1, flexDirection: 'row'}]}>
-                { userCart[drugID] == 1 ?
-                  <TouchableOpacity onPress={() => this.deleteFromCart(drugID)}>
-                    <Image source={Constants.img.delete} style={styles.cartBtnIcons}/>
-                  </TouchableOpacity>
-                :
-                  <TouchableOpacity onPress={() => this.updateCartCount(drugID, -1)}>
-                    <Image source={Constants.img.minus} style={styles.cartBtnIcons}/>
-                  </TouchableOpacity>
-                }
-                <Text style={{color: Constants.colors.black, fontFamily: Constants.fonts.semibold, fontSize: 15}}>{userCart[drugID]}</Text>
-                <TouchableOpacity onPress={() => this.updateCartCount(drugID, +1)}>
-                  <Image source={Constants.img.plus} style={styles.cartBtnIcons}/>
-                </TouchableOpacity>
-              </View>
+              <CartCard
+                quantity={userCart[drugID]}
+                onDelete={() => this.deleteFromCart(drugID)}
+                onMinus={() => this.updateCartCount(drugID, -1)}
+                onPlus={() => this.updateCartCount(drugID, +1)}/>
             :
-              <TouchableOpacity style={[styles.cartButton, {backgroundColor: Constants.colors.primaryGreen}]} onPress={() => this.addToCart(drugID)}>
-                <Text style={{color: Constants.colors.white, fontFamily: Constants.fonts.semibold, fontSize: 15,}}>Add</Text>
-              </TouchableOpacity>
+              <CartCard isAdd={true} onAdd={() => this.addToCart(drugID)}/>
             }
           </View>
         </TouchableOpacity>
@@ -147,24 +135,7 @@ export default class Notification extends React.Component {
             /> :
           <Text style={{alignSelf: 'center', color: Constants.colors.centralGray, fontFamily: Constants.fonts.semibold, fontSize: 20, marginTop: 150}}>Nothing Came Up</Text>}
         </View>
-        <Modal
-          visible={this.state.showLoading1 || this.state.showLoading2 || this.state.showSearching}
-          transparent={true}
-          animationType="fade">
-          <View style={styles.modalContainer}>
-            <View style={styles.modal}>
-              <View style={{justifyContent: 'center'}}>
-                <Progress.CircleSnail
-                  indeterminate={true}
-                  size={60}
-                  color={Constants.colors.primaryGreen}
-                  style={{backgroundColor: 'white'}}
-                  spinDuration={3000}/>
-                <View style={{width: 48, height: 48, position: 'absolute', alignSelf: 'center', backgroundColor: Constants.colors.white, borderRadius: 30}}/>
-              </View>
-            </View>
-          </View>
-        </Modal>
+        <LoadingModal visible={this.state.showLoading1 || this.state.showLoading2 || this.state.showSearching}/>
       </>
     );
   }
@@ -222,19 +193,6 @@ const styles = StyleSheet.create({
       backgroundColor: "rgba(9, 28, 63, 0.5)",
       width: '90%',
       alignSelf: "center",
-    },
-    cartButton: {
-      width: 80,
-      height: 30,
-      borderRadius: 10,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    cartBtnIcons: {
-      width: 12,
-      height: 12,
-      resizeMode: 'contain',
-      marginHorizontal: 15
     },
     modalContainer: {
       flex: 1,
