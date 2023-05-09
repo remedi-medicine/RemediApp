@@ -11,7 +11,7 @@ import globalStyles from "../Constants/globalStyles";
 
 const {width, height} = Dimensions.get('window');
 
-export default class Cart extends React.Component {
+export default class Register extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -96,7 +96,7 @@ export default class Cart extends React.Component {
                                   value={this.state.password}
                                   placeholder="Enter Your Password"
                                   placeholderTextColor={Constants.colors.centralGray}
-                                  autoComplete='password'
+                                  autoComplete='password-new'
                                   onChangeText={(newPassword) => this.setState({password: newPassword})}
                                   onFocus={() => {this.setState({showBlank: true}); this.scrollView.scrollToEnd({animated: true})}}
                                   onBlur={() => this.setState({showBlank: false})}

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text, ScrollView, TextInput, Dimensions, TouchableOpacity, Pressable, Alert, ToastAndroid } from "react-native";
+import { StyleSheet, View, Text, ScrollView, Dimensions, TouchableOpacity, Pressable, Alert, ToastAndroid } from "react-native";
 import Constants from "../Constants/Constants";
 import Header from "../components/Header";
 import TextBox from "../components/TextBox";
@@ -16,7 +16,7 @@ const userData = firebase
 const {width, height} = Dimensions.get('window');
 let Address = [];
 
-export default class Notification extends React.Component {
+export default class AddAddress extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

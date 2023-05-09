@@ -21,7 +21,7 @@ const userData = firebase
 let DrugList = {}, userCart = {}, Category=[];
 let categoryList = [];
 
-export default class Notification extends React.Component {
+export default class ViewCategory extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

@@ -20,7 +20,7 @@ const userData = firebase
 
 let DrugList = {}, userCart = {};
 
-export default class Cart extends React.Component {
+export default class ViewDrugs extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

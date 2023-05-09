@@ -19,7 +19,7 @@ const {width, height} = Dimensions.get('window');
 
 let Address = [];
 
-export default class Notification extends React.Component {
+export default class ViewAddress extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

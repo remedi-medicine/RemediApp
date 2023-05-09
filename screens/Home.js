@@ -186,7 +186,7 @@ export default class Home extends React.Component {
               <TouchableOpacity  style={{width: 45, height: 65}} onPress={() => this.props.navigation.navigate("Profile")}>{/*This marks a clickable outline for the profile icon*/}
                 <Image source={Constants.img.profile} style={styles.profile}/>{/*This renders the profile icon*/}
               </TouchableOpacity>
-              <Text style={styles.welcomeText}>Hi, {this.state.user.displayName}</Text>{/*This renders the welcome text along with name of user*/}
+              <Text style={styles.welcomeText} numberOfLines={1}>Hi, {this.state.user.displayName}</Text>{/*This renders the welcome text along with name of user*/}
               <Text style={styles.welcomeSubText}>{this.state.suburb}, {this.state.city} - {this.state.postcode}</Text>{/*This renders the location of the user*/}
               <TouchableOpacity style={styles.search}>{/*This marks a clickable outline for the search bar*/}
                 <Image source={Constants.img.search} style={styles.searchIcon}/>{/*This renders the search icon*/}
@@ -308,6 +308,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 24,
     fontFamily: Constants.fonts.bold,
+    width: '80%',
   },
   welcomeSubText: {
     color: 'white',

@@ -24,7 +24,7 @@ const userData = firebase
 let userCart = {};
 const { width, height } = Dimensions.get('window');
 
-export default class Notification extends React.Component {
+export default class Product extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

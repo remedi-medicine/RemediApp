@@ -15,6 +15,7 @@ export default class Cart extends React.Component {
           placeholderTextColor={Constants.colors.centralGray}
           autoComplete={this.props.autoComplete}
           onChangeText={this.props.onChangeText}
+          editable={this.props.editable}
         />
       </>
     )

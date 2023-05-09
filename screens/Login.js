@@ -11,7 +11,7 @@ import globalStyles from "../Constants/globalStyles";
 
 const {width, height} = Dimensions.get('window');
 
-export default class Cart extends React.Component {
+export default class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {

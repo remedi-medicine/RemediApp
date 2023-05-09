@@ -4,7 +4,7 @@ import Constants from "../Constants/Constants";
 import globalStyles from "../Constants/globalStyles";
 import * as Progress from "react-native-progress";
 
-export default class DrugCard extends React.Component {
+export default class LoadingModal extends React.Component {
   render() {
     return(
       <>

@@ -48,7 +48,7 @@ ProfileValue = ({ icon, label, onPress }) => {
 renderProfileSection() {
     return (
         <View style={styles.profileSectionContainer}>
-            <this.ProfileValue icon={Constants.img.listGreen} label="My Account"/>
+            <this.ProfileValue icon={Constants.img.listGreen} label="My Account" onPress={() => this.props.navigation.navigate("UpdateProfile")}/>
             <View style={styles.separator}/>
 
             <this.ProfileValue icon={Constants.img.savedForLater} label="Saved for Later"/>
