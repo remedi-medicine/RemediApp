@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, Modal, ToastAndroid, FlatList, TouchableOpacity
 import Constants from "../Constants/Constants";
 import Header from "../components/Header";
 import LoadingModal from "../components/LoadingModal";
-import CartCard from "../components/CartCard";
+import DrugCard from "../components/DrugCard";
 
 import auth from '@react-native-firebase/auth';
 import { firebase } from '@react-native-firebase/database';
