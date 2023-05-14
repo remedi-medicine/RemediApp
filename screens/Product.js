@@ -162,7 +162,7 @@ export default class Product extends React.Component {
                     onPlus={() => this.updateCartCount(this.state.drugID, +1)}  
                   />
                 :
-                  <CartCard isAdd={true} onAdd={() => this.addToCart(drugID)}/>
+                  <CartCard isAdd={true} onAdd={() => this.addToCart(this.state.drugID)}/>
                 }
               </View>
             </View>
